@@ -1,0 +1,5 @@
+# Convert RAR & Zip files to CBR & CBZ
+
+cd /d %~dp0
+ren *.zip *.cbz  
+ren *.rar *.cbr
