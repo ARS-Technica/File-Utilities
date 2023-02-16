@@ -1,0 +1,14 @@
+# Replace Underscores with Spaces
+
+@echo off
+Setlocal enabledelayedexpansion
+
+Set "Pattern=_"
+Set "Replace= "
+
+For %%a in (*.cbz) Do (
+    Set "File=%%~a"
+    Ren "%%a" "!File:%Pattern%=%Replace%!"
+)
+
+Pause&Exit
