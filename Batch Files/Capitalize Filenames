@@ -1,0 +1,13 @@
+@echo off
+Setlocal enabledelayedexpansion
+
+For %%G In (*.zip) Do (
+    Set "filename=%%~nG"
+    SetLocal EnableDelayedExpansion
+    Set "leading=!filename:~,1!"
+    For %%H In (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+    ) Do Set "leading=!leading:%%H=%%H!"
+    Ren "%%G" "!leading!!filename:~1!%%~xG" 1> NUL
+    EndLocal)
+
+Pause&Exit
