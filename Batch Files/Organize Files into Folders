@@ -1,0 +1,11 @@
+@echo off 
+setlocal enableDelayedExpansion
+
+cd /d "%~dp0"
+
+for /f "tokens=*" %%f in ('dir /b /a:-d ^| find /v "%~nx0"') do (
+    for /f "tokens=1,2 delims= " %%g in ("%%~nf") do set "folder=%%g %%h"
+    >nul 2>&1 mkdir "!folder!"
+    >nul 2>&1 move /y "%%f" "!folder!\%%~nxf"
+)
+pause 
