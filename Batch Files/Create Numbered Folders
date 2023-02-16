@@ -1,0 +1,4 @@
+@echo off
+
+for /l %%i in (1,1,9) do md "All-New Wolverine 0%%i"
+for /l %%i in (10,1,31) do md "All-New Wolverine %%i"
