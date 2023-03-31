@@ -1,0 +1,14 @@
+@echo off
+setlocal enabledelayedexpansion
+
+set "extension=.mp3"
+set "suffix=(album)"
+
+for %%i in (*%extension%) do (
+    set "filename=%%i"
+    set "newname=!filename:%suffix%=!"
+    if not "!filename!"=="!newname!" ren "%%i" "!newname!"
+)
+
+echo All done!
+pause
