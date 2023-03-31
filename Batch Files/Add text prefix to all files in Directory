@@ -1,0 +1,12 @@
+@echo off
+setlocal enabledelayedexpansion
+
+set "extension=.mp3"
+set "prefix=Adele - Album 19 - "
+
+for %%i in (*%extension%) do (
+    ren "%%i" "%prefix%%%i"
+)
+
+echo All done!
+pause
