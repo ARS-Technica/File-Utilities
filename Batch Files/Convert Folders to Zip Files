@@ -1,0 +1,18 @@
+@echo off
+setlocal enabledelayedexpansion
+
+rem Get the path to the current directory
+set "dir_path=%CD%"
+
+rem Loop through each folder in the current directory
+for /d %%a in ("%dir_path%\*") do (
+    rem Get the name of the current folder
+    set "folder_name=%%~nxa"
+    rem Create a zip file with the same name as the folder
+    "C:\Program Files\7-Zip\7z.exe" a -tzip "!folder_name!.zip" "%%a\*"
+    rem Optional: Delete the original folder
+    rem rmdir /s /q "%%a"
+)
+
+rem Optional: Pause the script before closing
+pause
