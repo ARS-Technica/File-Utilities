@@ -4,7 +4,7 @@ setlocal enabledelayedexpansion
 rem Get the name of the parent directory
 for %%I in (.) do set "parentdir=%%~nxI"
 
-for %%F in (*.cbz) do (
+for %%F in (*.cbz *.cbr) do (
     set "filename=%%~nF"
     
     rem Loop through characters in the filename
