@@ -1,0 +1,27 @@
+@echo off
+setlocal enabledelayedexpansion
+
+rem Get the name of the parent directory
+for %%I in (.) do set "parentdir=%%~nxI"
+
+for %%F in (*.cbz) do (
+    set "filename=%%~nF"
+    
+    rem Loop through characters in the filename
+    set "numeric="
+    for %%C in (!filename!) do (
+        set "char=%%C"
+        if "!char!" geq "0" if "!char!" leq "9" (
+            set "numeric=!numeric!!char!"
+        )
+    )
+    
+    rem Construct the new filename
+    if defined numeric (
+        set "newname=!parentdir! !numeric!%%~xF"
+        ren "%%F" "!newname!"
+    )
+)
+
+echo Renaming complete.
+pause
