@@ -1,0 +1,61 @@
+"""
+A simple script to download every available issue of a single manga series hosted on https://w15.mangafreak.net. 
+"""
+
+
+import os
+import requests
+from bs4 import BeautifulSoup
+import re
+
+def get_manga_title(url):
+    # Extract the manga title from the URL
+    manga_title = url.split('/')[-1]
+    manga_title = manga_title.replace("_", " ")
+    return manga_title
+
+def download_files(url, folder_path):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    # Find all download links with the text "Download"
+    download_links = soup.find_all('a', text=re.compile(r'Download', re.IGNORECASE))
+
+    for link in download_links:
+        file_url = link['href']
+        file_name = file_url.split('/')[-1]
+
+        # Replace "_" with space in the file name
+        file_name = file_name.replace("_", " ")
+
+        # Change .zip extension to .cbz and .rar extension to .cbr
+        if file_name.endswith('.zip'):
+            file_name = file_name.replace('.zip', '.cbz')
+        elif file_name.endswith('.rar'):
+            file_name = file_name.replace('.rar', '.cbr')
+
+        # Download the file and save it to the local folder
+        with open(os.path.join(folder_path, file_name), 'wb') as file:
+            file_response = requests.get(file_url)
+            file.write(file_response.content)
+
+def main():
+    # Prompt the user for the URL
+    url = input("Enter the URL: ")
+
+    # Check if the URL matches the specified format
+    if not url.startswith("https://w15.mangafreak.net"):
+        print("Invalid URL. Please provide a valid MangaFreak URL.")
+        return
+
+    # Create a folder with the manga title
+    manga_title = get_manga_title(url)
+    folder_path = manga_title  # You can specify a directory path here if needed
+    os.makedirs(folder_path, exist_ok=True)
+
+    # Download files from the URL
+    download_files(url, folder_path)
+
+if __name__ == "__main__":
+    main()
+
