@@ -4,14 +4,13 @@ A simple script to download every available issue of a single manga series hoste
 
 
 import os
-import requests
+import time
 from bs4 import BeautifulSoup
-import re
 from tqdm import tqdm
 import tkinter as tk
 from tkinter import ttk
-import urllib.parse
-import time
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 def get_manga_title(url):
     manga_title = url.split('/')[-1]
@@ -28,9 +27,14 @@ def get_save_folder():
 
     return folder_path
 
-def download_files(url, folder_path, progress_bar, session):
-    response = session.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
+def download_files(url, folder_path, progress_bar, driver):
+    driver.get(url)
+    time.sleep(5)  # Wait for page to load (adjust as needed)
+
+    # Get the page source after JavaScript execution
+    page_source = driver.page_source
+
+    soup = BeautifulSoup(page_source, 'html.parser')
     all_links = soup.find_all('a')
 
     # Filter links containing the word "Download"
@@ -44,24 +48,15 @@ def download_files(url, folder_path, progress_bar, session):
         if not file_url:
             continue
 
-        # Construct the full URL if it's a relative URL
-        if not file_url.startswith(('http:', 'https:')):
-            file_url = urllib.parse.urljoin(url, file_url)
-
         with open(os.path.join(folder_path, file_name), 'wb') as file:
-            file_response = session.get(file_url, stream=True)
+            driver.get(file_url)
 
-            if file_response.status_code != 200:
-                print(f"Failed to download {file_name}")
-                continue
+            # Wait for the file to download (adjust as needed)
+            time.sleep(10)
 
-            total_size = int(file_response.headers.get('content-length', 0))
-            block_size = 1024
+            # Save the file using Selenium's save_screenshot (you may need to customize this)
+            driver.save_screenshot(os.path.join(folder_path, file_name))
 
-            with tqdm(total=total_size, unit='B', unit_scale=True, desc=file_name) as pbar:
-                for data in file_response.iter_content(block_size):
-                    pbar.update(len(data))
-                    file.write(data)
         progress_bar.step(1)
 
 def main():
@@ -87,27 +82,25 @@ def main():
     overall_progress_bar = ttk.Progressbar(root, variable=overall_progress, maximum=100)
     overall_progress_bar.pack(pady=10)
 
-    # Create a session to maintain cookies between requests
-    session = requests.Session()
+    # Configure Chrome options for Selenium
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Run Chrome in headless mode (no GUI)
+    driver = webdriver.Chrome(executable_path='/path/to/chromedriver')
+    # Replace /path/to/chromedriver with the actual path to the ChromeDriver executable on your system.
 
-    # Set a user-agent header to mimic a web browser
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
-    }
-    session.headers.update(headers)
-
-    # Retry in case of CloudFlare challenges (adjust as needed)
+    # Retry in case of issues (adjust as needed)
     max_retries = 5
     retries = 0
 
     while retries < max_retries:
         try:
-            download_files(url, manga_folder, overall_progress_bar, session)
+            download_files(url, manga_folder, overall_progress_bar, driver)
+            driver.quit()
             root.destroy()
             print("Manga Downloaded Successfully!")
             break
-        except requests.exceptions.RequestException as e:
-            # Handle CloudFlare challenges or other network issues
+        except Exception as e:
+            # Handle exceptions (e.g., CloudFlare challenges, network issues)
             print(f"Error: {e}")
             print("Retrying...")
             retries += 1
