@@ -6,10 +6,12 @@ A simple script to download every available issue of a single manga series hoste
 import os
 import requests
 from bs4 import BeautifulSoup
+import re
 from tqdm import tqdm
 import tkinter as tk
 from tkinter import ttk
 import urllib.parse
+import time
 
 def get_manga_title(url):
     manga_title = url.split('/')[-1]
@@ -26,8 +28,8 @@ def get_save_folder():
 
     return folder_path
 
-def download_files(url, folder_path, progress_bar):
-    response = requests.get(url)
+def download_files(url, folder_path, progress_bar, session):
+    response = session.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     all_links = soup.find_all('a')
 
@@ -47,7 +49,7 @@ def download_files(url, folder_path, progress_bar):
             file_url = urllib.parse.urljoin(url, file_url)
 
         with open(os.path.join(folder_path, file_name), 'wb') as file:
-            file_response = requests.get(file_url, stream=True)
+            file_response = session.get(file_url, stream=True)
 
             if file_response.status_code != 200:
                 print(f"Failed to download {file_name}")
@@ -85,10 +87,34 @@ def main():
     overall_progress_bar = ttk.Progressbar(root, variable=overall_progress, maximum=100)
     overall_progress_bar.pack(pady=10)
 
-    download_files(url, manga_folder, overall_progress_bar)
+    # Create a session to maintain cookies between requests
+    session = requests.Session()
 
-    root.destroy()
-    print("Manga Downloaded Successfully!")
+    # Set a user-agent header to mimic a web browser
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+    }
+    session.headers.update(headers)
+
+    # Retry in case of CloudFlare challenges (adjust as needed)
+    max_retries = 5
+    retries = 0
+
+    while retries < max_retries:
+        try:
+            download_files(url, manga_folder, overall_progress_bar, session)
+            root.destroy()
+            print("Manga Downloaded Successfully!")
+            break
+        except requests.exceptions.RequestException as e:
+            # Handle CloudFlare challenges or other network issues
+            print(f"Error: {e}")
+            print("Retrying...")
+            retries += 1
+            time.sleep(5)  # Wait before retrying (adjust as needed)
+
+    if retries >= max_retries:
+        print("Max retries reached. Failed to download manga.")
 
 if __name__ == "__main__":
     main()
