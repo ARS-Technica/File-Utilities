@@ -6,10 +6,10 @@ A simple script to download every available issue of a single manga series hoste
 import os
 import requests
 from bs4 import BeautifulSoup
-import re
 from tqdm import tqdm
 import tkinter as tk
 from tkinter import ttk
+import urllib.parse
 
 def get_manga_title(url):
     manga_title = url.split('/')[-1]
@@ -35,17 +35,24 @@ def download_files(url, folder_path, progress_bar):
     download_links = [link for link in all_links if 'Download' in link.text]
 
     for link in download_links:
-        file_url = link['href']
-        file_name = file_url.split('/')[-1]
+        file_name = link.text.strip()
         file_name = file_name.replace("_", " ")
 
-        if file_name.endswith('.zip'):
-            file_name = file_name.replace('.zip', '.cbz')
-        elif file_name.endswith('.rar'):
-            file_name = file_name.replace('.rar', '.cbr')
+        file_url = link.get('href')
+        if not file_url:
+            continue
+
+        # Construct the full URL if it's a relative URL
+        if not file_url.startswith(('http:', 'https:')):
+            file_url = urllib.parse.urljoin(url, file_url)
 
         with open(os.path.join(folder_path, file_name), 'wb') as file:
             file_response = requests.get(file_url, stream=True)
+
+            if file_response.status_code != 200:
+                print(f"Failed to download {file_name}")
+                continue
+
             total_size = int(file_response.headers.get('content-length', 0))
             block_size = 1024
 
