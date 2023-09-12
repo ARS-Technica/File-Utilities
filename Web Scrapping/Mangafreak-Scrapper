@@ -17,21 +17,22 @@ def get_manga_title(url):
     return manga_title
 
 def get_save_folder():
-    # Ask the user for the folder where they want to save the files
     folder_path = input("Enter the folder path where you want to save the manga files: ")
-    folder_path = folder_path.strip()  # Remove leading/trailing spaces
+    folder_path = folder_path.strip()
 
-    # Check if the provided folder path is valid
     if not os.path.isdir(folder_path):
         print("Invalid folder path. Please provide a valid existing folder path.")
-        return get_save_folder()  # Recursively ask for a valid path
+        return get_save_folder()
 
     return folder_path
 
 def download_files(url, folder_path, progress_bar):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
-    download_links = soup.find_all('a', text=re.compile(r'Download', re.IGNORECASE))
+    all_links = soup.find_all('a')
+
+    # Filter links containing the word "Download"
+    download_links = [link for link in all_links if 'Download' in link.text]
 
     for link in download_links:
         file_url = link['href']
@@ -63,10 +64,8 @@ def main():
 
     manga_title = get_manga_title(url)
 
-    # Ask the user for the folder path where they want to save the files
     folder_path = get_save_folder()
 
-    # Create the folder if it doesn't exist
     manga_folder = os.path.join(folder_path, manga_title.replace(" ", "_"))
     os.makedirs(manga_folder, exist_ok=True)
 
@@ -86,6 +85,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
 
