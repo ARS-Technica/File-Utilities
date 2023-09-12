@@ -9,12 +9,24 @@ from bs4 import BeautifulSoup
 import re
 from tqdm import tqdm
 import tkinter as tk
-from tkinter import ttk  # Import ttk for themed tkinter
+from tkinter import ttk
 
 def get_manga_title(url):
     manga_title = url.split('/')[-1]
     manga_title = manga_title.replace("_", " ")
     return manga_title
+
+def get_save_folder():
+    # Ask the user for the folder where they want to save the files
+    folder_path = input("Enter the folder path where you want to save the manga files: ")
+    folder_path = folder_path.strip()  # Remove leading/trailing spaces
+
+    # Check if the provided folder path is valid
+    if not os.path.isdir(folder_path):
+        print("Invalid folder path. Please provide a valid existing folder path.")
+        return get_save_folder()  # Recursively ask for a valid path
+
+    return folder_path
 
 def download_files(url, folder_path, progress_bar):
     response = requests.get(url)
@@ -40,7 +52,7 @@ def download_files(url, folder_path, progress_bar):
                 for data in file_response.iter_content(block_size):
                     pbar.update(len(data))
                     file.write(data)
-        progress_bar.step(1)  # Increment the overall progress bar
+        progress_bar.step(1)
 
 def main():
     url = input("Enter the URL: ")
@@ -50,8 +62,13 @@ def main():
         return
 
     manga_title = get_manga_title(url)
-    folder_path = manga_title.replace(" ", "_")
-    os.makedirs(folder_path, exist_ok=True)
+
+    # Ask the user for the folder path where they want to save the files
+    folder_path = get_save_folder()
+
+    # Create the folder if it doesn't exist
+    manga_folder = os.path.join(folder_path, manga_title.replace(" ", "_"))
+    os.makedirs(manga_folder, exist_ok=True)
 
     root = tk.Tk()
     root.title("Manga Scraper Progress")
@@ -59,15 +76,16 @@ def main():
     overall_progress = tk.DoubleVar()
     overall_progress.set(0)
 
-    # Use ttk.Progressbar instead of tkinter.Progressbar
     overall_progress_bar = ttk.Progressbar(root, variable=overall_progress, maximum=100)
     overall_progress_bar.pack(pady=10)
 
-    download_files(url, folder_path, overall_progress_bar)
+    download_files(url, manga_folder, overall_progress_bar)
 
     root.destroy()
     print("Manga Downloaded Successfully!")
 
 if __name__ == "__main__":
     main()
+
+
 
