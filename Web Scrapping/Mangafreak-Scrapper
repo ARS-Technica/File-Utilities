@@ -7,8 +7,9 @@ import os
 import requests
 from bs4 import BeautifulSoup
 import re
-from tqdm import tqdm  # Import tqdm for the progress bar
-import tkinter as tk  # Import tkinter for the GUI
+from tqdm import tqdm
+import tkinter as tk
+from tkinter import ttk  # Import ttk for themed tkinter
 
 def get_manga_title(url):
     manga_title = url.split('/')[-1]
@@ -33,13 +34,13 @@ def download_files(url, folder_path, progress_bar):
         with open(os.path.join(folder_path, file_name), 'wb') as file:
             file_response = requests.get(file_url, stream=True)
             total_size = int(file_response.headers.get('content-length', 0))
-            block_size = 1024  # 1 KB
+            block_size = 1024
 
             with tqdm(total=total_size, unit='B', unit_scale=True, desc=file_name) as pbar:
                 for data in file_response.iter_content(block_size):
                     pbar.update(len(data))
                     file.write(data)
-        progress_bar.update(1)  # Increment the overall progress bar
+        progress_bar.step(1)  # Increment the overall progress bar
 
 def main():
     url = input("Enter the URL: ")
@@ -52,26 +53,21 @@ def main():
     folder_path = manga_title.replace(" ", "_")
     os.makedirs(folder_path, exist_ok=True)
 
-    # Initialize GUI
     root = tk.Tk()
     root.title("Manga Scraper Progress")
 
-    # Create a progress bar for the overall progress
     overall_progress = tk.DoubleVar()
     overall_progress.set(0)
 
-    overall_progress_bar = tk.Progressbar(root, variable=overall_progress, maximum=100)
+    # Use ttk.Progressbar instead of tkinter.Progressbar
+    overall_progress_bar = ttk.Progressbar(root, variable=overall_progress, maximum=100)
     overall_progress_bar.pack(pady=10)
 
-    # Download files and update the progress bar
     download_files(url, folder_path, overall_progress_bar)
 
-    # Close the GUI and display a completion message
     root.destroy()
     print("Manga Downloaded Successfully!")
 
 if __name__ == "__main__":
     main()
-
-
 
