@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 :: 1. Prompt the user for the suffix to remove
-set /p suffix="Enter the suffix to remove (e.g., _OceanofPDF.com): "
+set /p suffix="Enter the suffix to remove from filenames: "
 echo.
 
 echo This script will remove "%suffix%" from the end of filenames and replace underscores with spaces.
@@ -34,7 +34,6 @@ for %%f in (*) do (
         )
     )
 )
-
 
 echo.
 echo Process complete.
