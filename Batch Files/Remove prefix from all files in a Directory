@@ -1,0 +1,7 @@
+@echo off
+setlocal enabledelayedexpansion
+
+:: 1. Prompt the user for the prefix variable
+
+:: 2. Remove user-defined prefix and replace underscores
+  
