@@ -1,14 +1,11 @@
 @echo off
 setlocal enabledelayedexpansion
 
-set "extension=.mp3"
-set "suffix=(album)"
+:: 1. Prompt the user for the suffix to remove
+ 
+:: 2. Rename files
+ 
 
-for %%i in (*%extension%) do (
-    set "filename=%%i"
-    set "newname=!filename:%suffix%=!"
-    if not "!filename!"=="!newname!" ren "%%i" "!newname!"
-)
-
-echo All done!
+echo.
+echo Process complete.
 pause
