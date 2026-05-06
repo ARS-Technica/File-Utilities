@@ -2,6 +2,14 @@
 setlocal enabledelayedexpansion
 
 :: 1. Prompt the user for the prefix variable
+set /p prefix="Enter the prefix to remove (e.g., _OceanofPDF.com_): "
+
+echo This script will remove "%prefix%", replace underscores with spaces, and delete duplicates.
+pause
 
 :: 2. Remove user-defined prefix and replace underscores
   
+@echo off
+setlocal enabledelayedexpansion
+
+ 
