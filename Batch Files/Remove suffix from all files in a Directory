@@ -7,9 +7,34 @@ echo.
 
 echo This script will remove "%suffix%" from the end of filenames and replace underscores with spaces.
 pause
- 
+
 :: 2. Rename files
- 
+echo Renaming files...
+for %%f in (*) do (
+    :: Separate filename and extension
+    set "oldFull=%%f"
+    set "oldName=%%~nf"
+    set "ext=%%~xf"
+    
+    if /I not "%%f"=="%~nx0" (
+        
+        :: Remove the suffix from the name part only
+        :: This replaces the suffix with nothing
+        set "newName=!oldName:%suffix%=!"
+        
+        :: Replace underscores with spaces
+        set "newName=!newName:_= !"
+        
+        :: Recombine name and extension
+        set "finalName=!newName!!ext!"
+        
+        if not "!oldFull!"=="!finalName!" (
+            echo Renaming: "!oldFull!" -> "!finalName!"
+            ren "!oldFull!" "!finalName!"
+        )
+    )
+)
+
 
 echo.
 echo Process complete.
