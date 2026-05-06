@@ -2,14 +2,31 @@
 setlocal enabledelayedexpansion
 
 :: 1. Prompt the user for the prefix variable
-set /p prefix="Enter the prefix to remove (e.g., _OceanofPDF.com_): "
+set /p prefix="Enter the prefix to remove from filenames: "
 
 echo This script will remove "%prefix%", replace underscores with spaces, and delete duplicates.
 pause
 
 :: 2. Remove user-defined prefix and replace underscores
-  
-@echo off
-setlocal enabledelayedexpansion
+echo Renaming files...
+for %%f in (*) do (
+    set "filename=%%f"
+    
+    if /I not "%%f"=="%~nx0" (
+        :: Remove the prefix the user typed in
+        set "filename=!filename:%prefix%=!"
+        
+        :: Replace underscores with spaces
+        set "filename=!filename:_= !"
+        
+        if not "%%f"=="!filename!" (
+            echo Renaming "%%f" to "!filename!"
+            ren "%%f" "!filename!"
+        )
+    )
+)
 
+echo.
+echo Process complete.
+pause
  
