@@ -24,9 +24,13 @@ def read_xspf_playlist(file_path):
     # Define the XSPF namespace to find elements correctly
     namespace = {'xspf': 'http://xspf.org'}
 
+    print(f"--- Tracks found in {file_path} ---")
+
     # Find all <track> tags inside <trackList>
-    for track in root.findall('.//xspf:track', namespace):
-        location = track.find('xspf:location', namespace)
+    for track in root.findall('.//ns:track', namespace):
+        title_element = track.find('ns:title', namespace)
+        location_element = track.find('xspf:location', namespace)
+
         if location is not None:
             songs.append(location.text)
             
