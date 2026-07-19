@@ -31,8 +31,16 @@ def read_xspf_playlist(file_path):
         title_element = track.find('ns:title', namespace)
         location_element = track.find('xspf:location', namespace)
 
-        if location is not None:
-            songs.append(location.text)
+        # Extract text if the elements exist
+        title = title_element.text if title_element is not None else "Unknown Title"
+        location = location_element.text if location_element is not None else "Unknown Location"
+
+        # VLC encodes local file paths as URLs (e.g., file:///C:/Music/song.mp3)
+        # unquote converts %20 back to spaces, etc.
+        clean_path = unquote(location)
+
+        print(f"Title: {title}")
+        print(f"Path/URL: {clean_path}\n")    
             
     return songs
 
