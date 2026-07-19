@@ -45,5 +45,8 @@ def read_xspf_playlist(file_path):
     return songs
 
 
+# Playlist for Debuggin
 # playlist = read_xspf_playlist('my_songs.xspf')
+
+# Print out Playlist for Debugging
 # print(playlist)
