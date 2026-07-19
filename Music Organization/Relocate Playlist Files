@@ -13,6 +13,16 @@ track locations.
 import xml.etree.ElementTree as ET
 
 
+def read_xspf(file_path):
+    songs = []
+    
+    # Find all <track> tags inside <trackList>
+    for track in root.findall('.//xspf:track', namespace):
+        location = track.find('xspf:location', namespace)
+        if location is not None:
+            songs.append(location.text)
+            
+    return songs
 
 
 # playlist = read_xspf('my_songs.xspf')
