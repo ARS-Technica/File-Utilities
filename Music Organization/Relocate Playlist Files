@@ -1,0 +1,6 @@
+"""
+Relocated Music Files in an XSPF Playlist
+Created: July 18, 2026
+
+Description: Use Python to read a vlc playlist file
+"""
