@@ -3,4 +3,17 @@ Relocated Music Files in an XSPF Playlist
 Created: July 18, 2026
 
 Description: Use Python to read a vlc playlist file
+
+An XSPF (XML Shareable Playlist Format) file is a 
+type of XML file. You can read it using Python's 
+built-in xml.etree.ElementTree library to find all the 
+track locations.
 """
+
+import xml.etree.ElementTree as ET
+
+
+
+
+# playlist = read_xspf('my_songs.xspf')
+# print(playlist)
