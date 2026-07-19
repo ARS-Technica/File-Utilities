@@ -11,9 +11,10 @@ track locations.
 """
 
 import xml.etree.ElementTree as ET
+from urllib.parse import unquote
 
 
-def read_xspf(file_path):
+def read_xspf_playlist(file_path):
     songs = []
 
     # Parse the XML file
@@ -32,5 +33,5 @@ def read_xspf(file_path):
     return songs
 
 
-# playlist = read_xspf('my_songs.xspf')
+# playlist = read_xspf_playlist('my_songs.xspf')
 # print(playlist)
