@@ -15,7 +15,14 @@ import xml.etree.ElementTree as ET
 
 def read_xspf(file_path):
     songs = []
+
+    # Parse the XML file
+    tree = ET.parse(file_path)
+    root = tree.getroot()
     
+    # Define the XSPF namespace to find elements correctly
+    namespace = {'xspf': 'http://xspf.org'}
+
     # Find all <track> tags inside <trackList>
     for track in root.findall('.//xspf:track', namespace):
         location = track.find('xspf:location', namespace)
