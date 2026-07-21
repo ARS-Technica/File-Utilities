@@ -87,12 +87,24 @@ def main():
     # Clean up accidental spaces or quotes around the path
     file_path = user_input.strip().strip("'\"")
 
+    # Define the extensions we are looking for
+    extensions = ('.xspf', '.m3u', '.m3u8')
+
     # Check if the file actually exists before running
     if os.path.exists(file_path):
-        playlist = parse_xspf_playlist(file_path)
-        print(f"Successfully processed {len(playlist)} songs.")
+        if file_path.suffix.lower() in extensions:
+            # Route to the correct parsing function based on extension
+            if file_path.suffix.lower() == '.xspf':
+                parse_xspf(file_path)
+            else:
+                parse_m3u(file_path)
+
+        # playlist = parse_xspf_playlist(file_path)
+        # print(f"Successfully processed {len(playlist)} songs.")
     else:
-        print(f"\nError: Could not find a file at '{file_path}'. Please check the path and try again.")
+        print("No VLC playlist files (.xspf, .m3u, .m3u8) found in this directory.")
+
+        # print(f"\nError: Could not find a file at '{file_path}'. Please check the path and try again.")
 
 
 if __name__ == "__main__":
