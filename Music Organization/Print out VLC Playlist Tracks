@@ -36,8 +36,6 @@ def parse_xspf_playlist(file_path):
     # Define the XSPF namespace to find elements correctly
     namespace = {'ns': 'http://xspf.org/ns/0/'}
 
-    print(f"--- Tracks found in {file_path} ---")
-
     # Find all <track> tags inside <trackList>
     for track in root.findall('.//ns:track', namespace):
         title_element = track.find('ns:title', namespace)
@@ -54,13 +52,10 @@ def parse_xspf_playlist(file_path):
         # ...Alternatively, safely encode to printable ascii/utf-8 string
         #safe_title = title.encode('ascii', errors='ignore').decode('ascii')
 
-        # print(f"Title: {title}")
-        # print(f"Path/URL: {clean_path}\n")    
-
         # Collect into dictionary so the returned list has data
         songs.append({"title": title, "path": clean_path})            
 
-    output_playlist(songs)
+    output_playlist(file_path, songs)
 
     return None
 
@@ -78,8 +73,6 @@ def parse_m3u(file_path):
     # Define the XSPF namespace to find elements correctly
     namespace = {'ns': 'http://xspf.org/ns/0/'}
 
-    print(f"--- Tracks found in {file_path} ---")
-
     # Find all <track> tags inside <trackList>
     for track in root.findall('.//ns:track', namespace):
         title_element = track.find('ns:title', namespace)
@@ -99,16 +92,17 @@ def parse_m3u(file_path):
         # Collect into dictionary so the returned list has data
         songs.append({"title": title, "path": clean_path})            
 
-    output_playlist(songs)
+    output_playlist(file_path, songs)
 
     return None
 
 
-def output_playlist(playlist):
+def output_playlist(file_path, playlist):
     """
     Outputs the playlist to the console.
     """
     print(f"There are {len(playlist)} songs in this playlist.")
+    print(f"Tracks found in {file_path}:\n")
 
     for song in playlist:
         # print(f"Title: {song['title']}, Path: {song['path']}")
@@ -121,7 +115,7 @@ def output_playlist(playlist):
 
 def main():
     # Prompt the user for the file path
-    user_input = input("Enter the full path to your .xspf playlist file: ")
+    user_input = input("Enter the full path to your playlist file: ")
 
     # Clean up accidental spaces or quotes around the path
     file_path = user_input.strip().strip("'\"")
