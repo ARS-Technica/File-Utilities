@@ -11,7 +11,7 @@ track locations.
 """
 
 import xml.etree.ElementTree as ET
-from urllib.parse import unquote
+from urllib.parse import unquote  # For decoding URL-encoded paths
 
 
 def read_xspf_playlist(file_path):
@@ -22,7 +22,7 @@ def read_xspf_playlist(file_path):
     root = tree.getroot()
     
     # Define the XSPF namespace to find elements correctly
-    namespace = {'xspf': 'http://xspf.org'}
+    namespace = {'ns': 'http://xspf.org/ns/0/'}
 
     print(f"--- Tracks found in {file_path} ---")
 
@@ -41,7 +41,10 @@ def read_xspf_playlist(file_path):
 
         print(f"Title: {title}")
         print(f"Path/URL: {clean_path}\n")    
-            
+
+        # Collect into dictionary so the returned list has data
+        songs.append({"title": title, "path": clean_path})            
+        
     return songs
 
 
