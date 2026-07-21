@@ -29,7 +29,7 @@ def read_xspf_playlist(file_path):
     # Find all <track> tags inside <trackList>
     for track in root.findall('.//ns:track', namespace):
         title_element = track.find('ns:title', namespace)
-        location_element = track.find('xspf:location', namespace)
+        location_element = track.find('ns:location', namespace) 
 
         # Extract text if the elements exist
         title = title_element.text if title_element is not None else "Unknown Title"
