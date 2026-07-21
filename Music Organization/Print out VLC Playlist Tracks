@@ -10,16 +10,22 @@ built-in xml.etree.ElementTree library to find all the
 track locations.
 """
 
-import xml.etree.ElementTree as ET
+from turtle import title
+
+import os # For prompting user for a file path
 import sys # Reconfigures filenames to UTF-8 to avoid UnicodeDecodeError when printing paths
 from urllib.parse import unquote  # For decoding URL-encoded paths
+import xml.etree.ElementTree as ET
 
 
 # Force stdout to use UTF-8 and safely replace characters your terminal can't display
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 
-def read_xspf_playlist(file_path):
+def parse_xspf_playlist(file_path):
+    """
+    Parses XML-based VLC playlists.
+    """
     songs = []
 
     # Parse the XML file
@@ -41,8 +47,11 @@ def read_xspf_playlist(file_path):
         location = location_element.text if location_element is not None else "Unknown Location"
 
         # VLC encodes local file paths as URLs (e.g., file:///C:/Music/song.mp3)
-        # unquote converts %20 back to spaces, etc.
-        clean_path = unquote(location)
+        # Replace troublesome zero-width spaces manually
+        clean_path = unquote(location).replace('\u200b', '')
+
+        # ...Alternatively, safely encode to printable ascii/utf-8 string
+        #safe_title = title.encode('ascii', errors='ignore').decode('ascii')
 
         print(f"Title: {title}")
         print(f"Path/URL: {clean_path}\n")    
@@ -53,7 +62,25 @@ def read_xspf_playlist(file_path):
     return songs
 
 
-if __name__ == "__main__":
+def parse_m3u(file_path):
+    """
+    Parses plain-text M3U/M3U8 playlists.
+    """
+
+    return None  # Placeholder for future implementation of M3U parsing
+
+
+def output_playlist(playlist):
+    """
+    Outputs the playlist to the console.
+    """
+    for song in playlist:
+        print(f"Title: {song['title']}, Path: {song['path']}")
+    
+    return None  # Placeholder for future implementation of output formatting
+
+
+def main():
     # Prompt the user for the file path
     user_input = input("Enter the full path to your .xspf playlist file: ")
     
@@ -62,8 +89,21 @@ if __name__ == "__main__":
 
     # Check if the file actually exists before running
     if os.path.exists(file_path):
-        playlist = read_xspf_playlist(file_path)
+        playlist = parse_xspf_playlist(file_path)
         print(f"Successfully processed {len(playlist)} songs.")
     else:
         print(f"\nError: Could not find a file at '{file_path}'. Please check the path and try again.")
 
+
+if __name__ == "__main__":
+    main()
+
+
+
+# Playlist for Debuggin
+#playlist = parse_xspf_playlist('C:\\Users\\andre\\Music\\Z Playlist Backups\\favorites.xspf')
+
+# Print out Playlist for Debugging
+#print(f"Retrieved {len(playlist)} songs.")
+
+# C:\\Users\\andre\\Music\\Z Playlist Backups\\favorites.xspf
