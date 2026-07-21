@@ -13,6 +13,7 @@ track locations.
 from turtle import title
 
 import os # For prompting user for a file path
+from pathlib import Path # For parsing and validating file paths
 import sys # Reconfigures filenames to UTF-8 to avoid UnicodeDecodeError when printing paths
 from urllib.parse import unquote  # For decoding URL-encoded paths
 import xml.etree.ElementTree as ET
@@ -66,24 +67,34 @@ def parse_m3u(file_path):
     """
     Parses plain-text M3U/M3U8 playlists.
     """
+    print(f"There are {len(playlist)} songs in this playlist.")
 
-    return None  # Placeholder for future implementation of M3U parsing
+    for song in playlist:
+        print(f"Title: {song['title']}, Path: {song['path']}")
+
+
+
+    return None  # Placeholder for future implementation of output formatting
 
 
 def output_playlist(playlist):
     """
     Outputs the playlist to the console.
     """
+    print(f"There are {len(playlist)} songs in this playlist.")
+
     for song in playlist:
         print(f"Title: {song['title']}, Path: {song['path']}")
-    
+
+
+
     return None  # Placeholder for future implementation of output formatting
 
 
 def main():
     # Prompt the user for the file path
     user_input = input("Enter the full path to your .xspf playlist file: ")
-    
+
     # Clean up accidental spaces or quotes around the path
     file_path = user_input.strip().strip("'\"")
 
@@ -102,9 +113,7 @@ def main():
         # playlist = parse_xspf_playlist(file_path)
         # print(f"Successfully processed {len(playlist)} songs.")
     else:
-        print("No VLC playlist files (.xspf, .m3u, .m3u8) found in this directory.")
-
-        # print(f"\nError: Could not find a file at '{file_path}'. Please check the path and try again.")
+        print(f"\nError: Could not find a playlist file (.xspf, .m3u, .m3u8) at '{file_path}'. Please check the path and try again.")
 
 
 if __name__ == "__main__":
