@@ -54,27 +54,54 @@ def parse_xspf_playlist(file_path):
         # ...Alternatively, safely encode to printable ascii/utf-8 string
         #safe_title = title.encode('ascii', errors='ignore').decode('ascii')
 
-        print(f"Title: {title}")
-        print(f"Path/URL: {clean_path}\n")    
+        # print(f"Title: {title}")
+        # print(f"Path/URL: {clean_path}\n")    
 
         # Collect into dictionary so the returned list has data
         songs.append({"title": title, "path": clean_path})            
 
-    return songs
+    output_playlist(songs)
+
+    return None
 
 
 def parse_m3u(file_path):
     """
     Parses plain-text M3U/M3U8 playlists.
     """
-    print(f"There are {len(playlist)} songs in this playlist.")
+    songs = []
 
-    for song in playlist:
-        print(f"Title: {song['title']}, Path: {song['path']}")
+    # Parse the XML file
+    tree = ET.parse(file_path)
+    root = tree.getroot()
+    
+    # Define the XSPF namespace to find elements correctly
+    namespace = {'ns': 'http://xspf.org/ns/0/'}
 
+    print(f"--- Tracks found in {file_path} ---")
 
+    # Find all <track> tags inside <trackList>
+    for track in root.findall('.//ns:track', namespace):
+        title_element = track.find('ns:title', namespace)
+        location_element = track.find('ns:location', namespace) 
 
-    return None  # Placeholder for future implementation of output formatting
+        # Extract text if the elements exist
+        title = title_element.text if title_element is not None else "Unknown Title"
+        location = location_element.text if location_element is not None else "Unknown Location"
+
+        # VLC encodes local file paths as URLs (e.g., file:///C:/Music/song.mp3)
+        # Replace troublesome zero-width spaces manually
+        clean_path = unquote(location).replace('\u200b', '')
+
+        # ...Alternatively, safely encode to printable ascii/utf-8 string
+        #safe_title = title.encode('ascii', errors='ignore').decode('ascii')
+
+        # Collect into dictionary so the returned list has data
+        songs.append({"title": title, "path": clean_path})            
+
+    output_playlist(songs)
+
+    return None
 
 
 def output_playlist(playlist):
@@ -84,11 +111,12 @@ def output_playlist(playlist):
     print(f"There are {len(playlist)} songs in this playlist.")
 
     for song in playlist:
-        print(f"Title: {song['title']}, Path: {song['path']}")
+        # print(f"Title: {song['title']}, Path: {song['path']}")
 
+        print(f"Title: {song['title']}")
+        print(f"Path/URL: {song['clean_path']}\n")    
 
-
-    return None  # Placeholder for future implementation of output formatting
+    return None
 
 
 def main():
