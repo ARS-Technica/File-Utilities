@@ -44,7 +44,7 @@ def read_xspf_playlist(file_path):
 
         # Collect into dictionary so the returned list has data
         songs.append({"title": title, "path": clean_path})            
-        
+
     return songs
 
 
@@ -52,6 +52,7 @@ def read_xspf_playlist(file_path):
 playlist = read_xspf_playlist('C:\\Users\\andre\\Music\\Z Playlist Backups\\favorites.xspf')
 
 # Print out Playlist for Debugging
-print(playlist)
+# print(playlist)
+print(f"Retrieved {len(playlist)} songs.")
 
 
