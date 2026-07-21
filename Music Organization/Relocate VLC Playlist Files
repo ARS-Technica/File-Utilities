@@ -11,7 +11,12 @@ track locations.
 """
 
 import xml.etree.ElementTree as ET
+import sys # Reconfigures filenames to UTF-8 to avoid UnicodeDecodeError when printing paths
 from urllib.parse import unquote  # For decoding URL-encoded paths
+
+
+# Force stdout to use UTF-8 and safely replace characters your terminal can't display
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 
 def read_xspf_playlist(file_path):
