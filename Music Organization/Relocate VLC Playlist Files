@@ -45,26 +45,10 @@ def read_xspf_playlist(file_path):
     return songs
 
 
-def main():
-    # Prompt the user for the directory path
-    search_directory = input("Enter the directory path to search for playlists: ").strip()
+# Playlist for Debuggin
+playlist = read_xspf_playlist('C:\\Users\\andre\\Music\\Z Playlist Backups\\favorites.xspf')
 
-    # Validate that the directory actually exists
-    if not search_directory.exists():
-        print(f"Error: The directory '{search_directory}' does not exist.")
-        return
-    if not search_dir.is_dir():
-        print(f"Error: '{search_directory}' is a file, not a directory.")
-        return
+# Print out Playlist for Debugging
+print(playlist)
 
-
-    # Playlist for Debuggin
-    # playlist = read_xspf_playlist('my_songs.xspf')
-
-    # Print out Playlist for Debugging
-    # print(playlist)
-
-
-if __name__ == "__main__":
-    main()
 
