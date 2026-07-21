@@ -53,11 +53,10 @@ def read_xspf_playlist(file_path):
     return songs
 
 
-# Playlist for Debuggin
-playlist = read_xspf_playlist('C:\\Users\\andre\\Music\\Z Playlist Backups\\favorites.xspf')
-
-# Print out Playlist for Debugging
-# print(playlist)
-print(f"Retrieved {len(playlist)} songs.")
-
+if __name__ == "__main__":
+    # Prompt the user for the file path
+    user_input = input("Enter the full path to your .xspf playlist file: ")
+    
+    playlist = read_xspf_playlist(file_path)
+    print(f"Successfully processed {len(playlist)} songs.")
 
