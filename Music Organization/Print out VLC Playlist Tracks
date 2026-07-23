@@ -17,8 +17,9 @@ from urllib.parse import unquote  # For decoding URL-encoded paths
 import xml.etree.ElementTree as ET
 
 
-# Force stdout to use UTF-8 and safely replace characters your terminal can't display
-sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+# Force stdout to use UTF-8 if the environment supports it
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 
 def parse_xspf_playlist(file_path):
@@ -139,40 +140,60 @@ def output_playlist(file_path, playlist):
         # print(f"Title: {song['title']}, Path: {song['path']}")
 
         print(f"Title: {song['title']}")
-        print(f"Path/URL: {song['clean_path']}\n")    
+        print(f"Path/URL: {song['path']}\n", flush=True)  
 
     return None
 
 
 def main():
+    print("--- PROGRAM STARTED ---", flush=True)
+
     # Prompt the user for the file path
     user_input = input("Enter the full path to your playlist file: ")
+    print(f"\n[DEBUG 1] Received input: '{user_input}'", flush=True)
+
+    # Prevent program from hanging due to buffer deadlock
+    sys.stdout.flush()  # Force the terminal to process the input immediately
 
     # Clean up accidental spaces or quotes around the path
     clean_input = user_input.strip().strip("'\"")
+    print(f"[DEBUG 2] Cleaned path: '{clean_input}'", flush=True)
+
+    # Visual feedback so you know it moved past input()
+    print(f"Processing: {clean_input}...") # Proves request isn't frozen
+    sys.stdout.flush()
 
     # Convert to a Path object for easier handling (so we can check .suffix)
     file_path = Path(clean_input).expanduser()
+    print(f"[DEBUG 3] Path object created. Checking if file exists...", flush=True)
 
     # Define the extensions we are looking for
     extensions = ('.xspf', '.m3u', '.m3u8')
 
+    print("Checking if file exists...", flush=True)
+
     # Check if the file actually exists before running
     if file_path.exists():
+        print("[DEBUG 4] File exists! Determining extension...", flush=True)
+
         # Save a few lines of code
         ext = file_path.suffix.lower()
+        print(f"[DEBUG 5] Extension detected: '{ext}'", flush=True)
 
         if ext in extensions:
             # Route to the correct parsing function based on extension
             if ext == '.xspf':
+                print("[DEBUG 6] Calling parse_xspf_playlist()...", flush=True)
                 parse_xspf_playlist(file_path)
             else:
+                print("[DEBUG 6] Calling parse_m3u()...", flush=True)
                 parse_m3u_playlist(file_path)
-
-        # playlist = parse_xspf_playlist(file_path)
-        # print(f"Successfully processed {len(playlist)} songs.")
+        else:
+            print(f"\nError: '{ext}' is not a supported playlist format. Please use .xspf, .m3u, or .m3u8.")
     else:
-        print(f"\nError: Could not find a playlist file (.xspf, .m3u, .m3u8) at '{file_path}'. Please check the path and try again.")
+        print(f"\nError: Could not find a file at '{file_path}'. Please check the path and try again.")
+
+    print("--- PROGRAM FINISHED ---", flush=True)
 
 
 if __name__ == "__main__":
