@@ -149,13 +149,16 @@ def main():
     user_input = input("Enter the full path to your playlist file: ")
 
     # Clean up accidental spaces or quotes around the path
-    file_path = user_input.strip().strip("'\"")
+    clean_input = user_input.strip().strip("'\"")
+
+    # Convert to a Path object for easier handling (so we can check .suffix)
+    file_path = Path(clean_input).expanduser()
 
     # Define the extensions we are looking for
     extensions = ('.xspf', '.m3u', '.m3u8')
 
     # Check if the file actually exists before running
-    if os.path.exists(file_path):
+    if file_path.exists():
         if file_path.suffix.lower() in extensions:
             # Route to the correct parsing function based on extension
             if file_path.suffix.lower() == '.xspf':
