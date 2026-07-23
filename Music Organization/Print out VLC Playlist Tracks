@@ -10,8 +10,6 @@ built-in xml.etree.ElementTree library to find all the
 track locations.
 """
 
-from turtle import title
-
 import os # For prompting user for a file path
 from pathlib import Path # For parsing and validating file paths
 import sys # Reconfigures filenames to UTF-8 to avoid UnicodeDecodeError when printing paths
