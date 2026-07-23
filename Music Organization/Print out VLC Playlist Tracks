@@ -64,6 +64,21 @@ def parse_m3u(file_path):
     """
     songs = []
 
+    with open(file_path, 'r', encoding='utf-8', errors='ignore') as file:
+        current_title = "Unknown Title"
+
+
+    output_playlist(file_path, songs)
+
+    return None
+
+'''
+def parse_m3u(file_path):
+    """
+    Parses plain-text M3U/M3U8 playlists.
+    """
+    songs = []
+
     # Parse the XML file
     tree = ET.parse(file_path)
     root = tree.getroot()
@@ -92,8 +107,8 @@ def parse_m3u(file_path):
 
     output_playlist(file_path, songs)
 
-
     return None
+'''
 
 
 def output_playlist(file_path, playlist):
