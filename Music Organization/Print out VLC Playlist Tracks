@@ -71,8 +71,19 @@ def parse_m3u(file_path):
             
             # Skip empty lines or M3U headers
             if not line or line == "#EXTM3U":
-                continue        
+                continue
 
+            # Grab metadata line (#EXTINF:123,Artist - Title)
+            if line.startswith("#EXTINF:"):
+                parts = line.split(',', 1)
+                if len(parts) > 1:
+                    current_title = parts[1]
+            
+            # Standard line is the actual path/URL
+            elif not line.startswith("#"):
+                clean_path = unquote(line).replace('\u200b', '')
+                songs.append({"title": current_title, "path": clean_path})
+                current_title = "Unknown Title"  # Reset for next track            
 
     output_playlist(file_path, songs)
 
