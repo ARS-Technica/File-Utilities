@@ -66,6 +66,12 @@ def parse_m3u(file_path):
 
     with open(file_path, 'r', encoding='utf-8', errors='ignore') as file:
         current_title = "Unknown Title"
+        for line in file:
+            line = line.strip()
+            
+            # Skip empty lines or M3U headers
+            if not line or line == "#EXTM3U":
+                continue        
 
 
     output_playlist(file_path, songs)
