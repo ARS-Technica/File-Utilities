@@ -58,7 +58,7 @@ def parse_xspf_playlist(file_path):
     return None
 
 
-def parse_m3u(file_path):
+def parse_m3u_playlist(file_path):
     """
     Parses plain-text M3U/M3U8 playlists.
     """
@@ -159,12 +159,15 @@ def main():
 
     # Check if the file actually exists before running
     if file_path.exists():
-        if file_path.suffix.lower() in extensions:
+        # Save a few lines of code
+        ext = file_path.suffix.lower()
+
+        if ext in extensions:
             # Route to the correct parsing function based on extension
-            if file_path.suffix.lower() == '.xspf':
-                parse_xspf(file_path)
+            if ext == '.xspf':
+                parse_xspf_playlist(file_path)
             else:
-                parse_m3u(file_path)
+                parse_m3u_playlist(file_path)
 
         # playlist = parse_xspf_playlist(file_path)
         # print(f"Successfully processed {len(playlist)} songs.")
