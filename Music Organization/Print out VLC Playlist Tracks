@@ -1,5 +1,5 @@
 """
-Relocated Music Files in an XSPF Playlist
+List VLC Playlist Tracks
 Created: July 18, 2026
 
 Description: Use Python to read a vlc playlist file
@@ -18,8 +18,7 @@ import xml.etree.ElementTree as ET
 
 
 # Force stdout to use UTF-8 if the environment supports it
-if hasattr(sys.stdout, 'reconfigure'):
-    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 
 def parse_xspf_playlist(file_path):
@@ -47,9 +46,6 @@ def parse_xspf_playlist(file_path):
         # VLC encodes local file paths as URLs (e.g., file:///C:/Music/song.mp3)
         # Replace troublesome zero-width spaces manually
         clean_path = unquote(location).replace('\u200b', '')
-
-        # ...Alternatively, safely encode to printable ascii/utf-8 string
-        #safe_title = title.encode('ascii', errors='ignore').decode('ascii')
 
         # Collect into dictionary so the returned list has data
         songs.append({"title": title, "path": clean_path})            
@@ -90,44 +86,6 @@ def parse_m3u_playlist(file_path):
 
     return None
 
-'''
-def parse_m3u(file_path):
-    """
-    Parses plain-text M3U/M3U8 playlists.
-    """
-    songs = []
-
-    # Parse the XML file
-    tree = ET.parse(file_path)
-    root = tree.getroot()
-    
-    # Define the XSPF namespace to find elements correctly
-    namespace = {'ns': 'http://xspf.org/ns/0/'}
-
-    # Find all <track> tags inside <trackList>
-    for track in root.findall('.//ns:track', namespace):
-        title_element = track.find('ns:title', namespace)
-        location_element = track.find('ns:location', namespace) 
-
-        # Extract text if the elements exist
-        title = title_element.text if title_element is not None else "Unknown Title"
-        location = location_element.text if location_element is not None else "Unknown Location"
-
-        # VLC encodes local file paths as URLs (e.g., file:///C:/Music/song.mp3)
-        # Replace troublesome zero-width spaces manually
-        clean_path = unquote(location).replace('\u200b', '')
-
-        # ...Alternatively, safely encode to printable ascii/utf-8 string
-        #safe_title = title.encode('ascii', errors='ignore').decode('ascii')
-
-        # Collect into dictionary so the returned list has data
-        songs.append({"title": title, "path": clean_path})            
-
-    output_playlist(file_path, songs)
-
-    return None
-'''
-
 
 def output_playlist(file_path, playlist):
     """
@@ -146,26 +104,24 @@ def output_playlist(file_path, playlist):
 
 
 def main():
-    print("--- PROGRAM STARTED ---", flush=True)
-
+    """
+    Main function to execute the playlist parsing logic.
+    """
     # Prompt the user for the file path
     user_input = input("Enter the full path to your playlist file: ")
-    print(f"\n[DEBUG 1] Received input: '{user_input}'", flush=True)
 
     # Prevent program from hanging due to buffer deadlock
     sys.stdout.flush()  # Force the terminal to process the input immediately
 
     # Clean up accidental spaces or quotes around the path
     clean_input = user_input.strip().strip("'\"")
-    print(f"[DEBUG 2] Cleaned path: '{clean_input}'", flush=True)
-
+  
     # Visual feedback so you know it moved past input()
     print(f"Processing: {clean_input}...") # Proves request isn't frozen
     sys.stdout.flush()
 
     # Convert to a Path object for easier handling (so we can check .suffix)
     file_path = Path(clean_input).expanduser()
-    print(f"[DEBUG 3] Path object created. Checking if file exists...", flush=True)
 
     # Define the extensions we are looking for
     extensions = ('.xspf', '.m3u', '.m3u8')
@@ -174,37 +130,24 @@ def main():
 
     # Check if the file actually exists before running
     if file_path.exists():
-        print("[DEBUG 4] File exists! Determining extension...", flush=True)
-
         # Save a few lines of code
         ext = file_path.suffix.lower()
-        print(f"[DEBUG 5] Extension detected: '{ext}'", flush=True)
 
         if ext in extensions:
             # Route to the correct parsing function based on extension
             if ext == '.xspf':
-                print("[DEBUG 6] Calling parse_xspf_playlist()...", flush=True)
                 parse_xspf_playlist(file_path)
             else:
-                print("[DEBUG 6] Calling parse_m3u()...", flush=True)
                 parse_m3u_playlist(file_path)
         else:
             print(f"\nError: '{ext}' is not a supported playlist format. Please use .xspf, .m3u, or .m3u8.")
     else:
         print(f"\nError: Could not find a file at '{file_path}'. Please check the path and try again.")
 
-    print("--- PROGRAM FINISHED ---", flush=True)
-
 
 if __name__ == "__main__":
     main()
 
 
-
 # Playlist for Debuggin
-#playlist = parse_xspf_playlist('C:\\Users\\andre\\Music\\Z Playlist Backups\\favorites.xspf')
-
-# Print out Playlist for Debugging
-#print(f"Retrieved {len(playlist)} songs.")
-
-# C:\\Users\\andre\\Music\\Z Playlist Backups\\favorites.xspf
+# C:\Users\andre\Music\Z Playlist Backups\favorites.xspf
