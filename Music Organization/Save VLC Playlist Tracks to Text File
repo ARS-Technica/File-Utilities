@@ -1,8 +1,9 @@
 """
-List VLC Playlist Tracks
+Print out VLC Playlist Tracks
 Created: July 18, 2026
 
-Description: Use Python to read a vlc playlist file
+Description: Use Python to read VLC playlist files (.xspf, .m3u, .m3u8) 
+             and export track details into a clean text file locally.
 
 An XSPF (XML Shareable Playlist Format) file is a 
 type of XML file. You can read it using Python's 
@@ -18,7 +19,9 @@ import xml.etree.ElementTree as ET
 
 
 # Force stdout to use UTF-8 if the environment supports it
-sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+# Force stdout to use UTF-8 if standard stream supports reconfigure
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.recon
 
 
 def parse_xspf_playlist(file_path):
