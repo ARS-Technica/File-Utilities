@@ -174,10 +174,15 @@ def main():
         if ext in extensions:
             # Route to the correct parsing function based on extension
             if ext == '.xspf':
-                parse_xspf_playlist(file_path)
+                songs = parse_xspf_playlist(file_path)
             else:
-                parse_m3u_playlist(file_path)
+                songs = parse_m3u_playlist(file_path)
 
+            # Check that there are tracks in the playlist before attempting to save
+            if songs:
+                save_playlist_to_file(file_path, songs)
+            else:
+                print("\nNo tracks found in the specified playlist file.")
 
         else:
             print(f"\nError: '{ext}' is not a supported playlist format. Please use .xspf, .m3u, or .m3u8.")
