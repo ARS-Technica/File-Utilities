@@ -109,7 +109,7 @@ def save_playlist_to_file(playlist_path, songs):
     directory as the input playlist file.
     """
     playlist_file = Path(playlist_path)
-    
+
     # Create output filename: e.g., 'favorites_tracks.txt'
     output_filename = f"{playlist_file.stem}_tracks.txt"
     output_path = playlist_file.parent / output_filename
@@ -119,12 +119,15 @@ def save_playlist_to_file(playlist_path, songs):
             out_file.write(f"Playlist Track Export: {playlist_file.name}\n")
             out_file.write(f"Total Tracks: {len(songs)}\n")
 
-        return output_path
-
         for idx, song in enumerate(songs, start=1):
             out_file.write(f"Track {idx}:\n")
             out_file.write(f"  Title: {song['title']}\n")
             out_file.write(f"  Path : {song['path']}\n\n")
+
+        print(f"\nSuccessfully exported {len(songs)} tracks to:")
+        print(f"{output_path.resolve()}")
+
+        return output_path
 
     except Exception as e:
         print(f"\nError saving text file: {e}")
