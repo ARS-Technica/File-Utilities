@@ -108,6 +108,16 @@ def save_playlist_to_file(playlist_path, songs):
     Saves the extracted track details into a text file in the same 
     directory as the input playlist file.
     """
+    playlist_file = Path(playlist_path)
+    
+    # Create output filename: e.g., 'favorites_tracks.txt'
+    output_filename = f"{playlist_file.stem}_tracks.txt"
+    output_path = playlist_file.parent / output_filename
+
+    try:
+        pass
+    except Exception as e: 
+        print(f"Error saving playlist to file: {e}")
 
     return None
 
