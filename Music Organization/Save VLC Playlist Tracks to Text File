@@ -138,11 +138,21 @@ def main():
     """
     Main function to execute the playlist parsing logic.
     """
+
+    try:
+        user_input = input("Enter the full path to your playlist file: ")
+    except (EOFError, RuntimeError):
+        print("\nError: This IDE environment does not support interactive terminal input.")
+        print("Please run this script from a real terminal or enable 'External Console' in your IDE settings.")
+        return
+
+    '''
     # Prompt the user for the file path
     user_input = input("Enter the full path to your playlist file: ")
 
     # Prevent program from hanging due to buffer deadlock
     sys.stdout.flush()  # Force the terminal to process the input immediately
+    '''
 
     # Clean up accidental spaces or quotes around the path
     clean_input = user_input.strip().strip("'\"")
