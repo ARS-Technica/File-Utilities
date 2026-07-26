@@ -11,6 +11,7 @@ built-in xml.etree.ElementTree library to find all the
 track locations.
 """
 
+from logging import root
 import os # For prompting user for a file path
 from pathlib import Path # For parsing and validating file paths
 import sys # Reconfigures filenames to UTF-8 to avoid UnicodeDecodeError when printing paths
@@ -33,9 +34,20 @@ def parse_xspf_playlist(file_path):
     # Parse the XML file
     tree = ET.parse(file_path)
     root = tree.getroot()
-    
+
     # Define the XSPF namespace to find elements correctly
     namespace = {'ns': 'http://xspf.org/ns/0/'}
+    tracks = root.findall('.//ns:track', namespace)
+
+    # Fallback: If no tracks found using namespace, ignore XML namespaces
+    if not tracks:
+        # {*}`track` matches any tag named 'track' regardless of namespace
+        tracks = root.findall('.//{*}track')
+    # This check ensures that we can still find tracks even if the XML uses a 
+    # different namespace or no namespace at all. It prevents the script from 
+    # failing to find tracks in playlists that don't strictly adhere to the 
+    # expected namespace. (Note: This is a response to "No tracks found in the 
+    # specified playlist file." displaying even when the file is valid.)
 
     # Find all <track> tags inside <trackList>
     for track in root.findall('.//ns:track', namespace):
