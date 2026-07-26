@@ -39,7 +39,7 @@ def parse_xspf_playlist(file_path):
     namespace = {'ns': 'http://xspf.org/ns/0/'}
     tracks = root.findall('.//ns:track', namespace)
 
-    # Fallback: If no tracks found using namespace, ignore XML namespaces
+    # Fallback: If no tracks found using namespace,  ignore XML namespaces
     if not tracks:
         # {*}`track` matches any tag named 'track' regardless of namespace
         tracks = root.findall('.//{*}track')
@@ -50,12 +50,13 @@ def parse_xspf_playlist(file_path):
     # specified playlist file." displaying even when the file is valid.)
 
     # Find all <track> tags inside <trackList>
-    for track in root.findall('.//ns:track', namespace):
-        title_element = track.find('ns:title', namespace)
-        location_element = track.find('ns:location', namespace) 
+    for track in tracks:
+        title_element = track.find('ns:title', namespace) if 'ns' in locals() else None location_element = track.find('ns:location', namespace) 
 
         # Extract text if the elements exist
-        title = title_element.text if title_element is not None else "Unknown Title"
+        if title_element is None:
+            title_element = track.find('{*}title')
+
         location = location_element.text if location_element is not None else "Unknown Location"
 
         # VLC encodes local file paths as URLs (e.g., file:///C:/Music/song.mp3)
