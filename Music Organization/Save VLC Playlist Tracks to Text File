@@ -115,11 +115,15 @@ def save_playlist_to_file(playlist_path, songs):
     output_path = playlist_file.parent / output_filename
 
     try:
-        pass
-    except Exception as e: 
-        print(f"Error saving playlist to file: {e}")
+        with open(output_path, 'w', encoding='utf-8') as f:
+            for song in songs:
+                f.write(f"Title: {song['title']}\n")
+                f.write(f"Path/URL: {song['path']}\n\n")
+        return output_path
 
-    return None
+    except Exception as e:
+        print(f"\nError saving text file: {e}")
+        return None
 
 
 def main():
