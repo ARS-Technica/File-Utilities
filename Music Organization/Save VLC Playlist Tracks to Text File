@@ -115,11 +115,16 @@ def save_playlist_to_file(playlist_path, songs):
     output_path = playlist_file.parent / output_filename
 
     try:
-        with open(output_path, 'w', encoding='utf-8') as f:
-            for song in songs:
-                f.write(f"Title: {song['title']}\n")
-                f.write(f"Path/URL: {song['path']}\n\n")
+        with open(output_path, 'w', encoding='utf-8') as out_file:
+            out_file.write(f"Playlist Track Export: {playlist_file.name}\n")
+            out_file.write(f"Total Tracks: {len(songs)}\n")
+
         return output_path
+
+        for idx, song in enumerate(songs, start=1):
+            out_file.write(f"Track {idx}:\n")
+            out_file.write(f"  Title: {song['title']}\n")
+            out_file.write(f"  Path : {song['path']}\n\n")
 
     except Exception as e:
         print(f"\nError saving text file: {e}")
