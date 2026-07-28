@@ -71,12 +71,18 @@ def parse_xspf_playlist(file_path):
         # Decode URL encoding (%20 -> space) and remove zero-width spaces
         clean_path = unquote(location).replace('\u200b', '')
 
+        # Strip file:/// URI scheme for clean local paths
+        if clean_path.startswith('file:///'):
+            clean_path = clean_path[8:]
+        elif clean_path.startswith('file://'):
+            clean_path = clean_path[7:]
+
         # Collect into dictionary so the returned list has data
         songs.append({"title": title, "path": clean_path})            
 
     output_playlist(file_path, songs) 
 
-    return None
+    return songs
 
 
 def parse_m3u_playlist(file_path):
