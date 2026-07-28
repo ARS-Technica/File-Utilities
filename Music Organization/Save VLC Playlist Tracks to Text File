@@ -37,6 +37,8 @@ def parse_xspf_playlist(file_path):
 
     # Define the XSPF namespace to find elements correctly
     namespace = {'ns': 'http://xspf.org/ns/0/'}
+
+    # First attempt: standard XSPF namespace query
     tracks = root.findall('.//ns:track', namespace)
 
     # Fallback: If no tracks found using namespace,  ignore XML namespaces
@@ -51,11 +53,11 @@ def parse_xspf_playlist(file_path):
 
     # Find all <track> tags inside <trackList>
     for track in tracks:
-        title_element = track.find('ns:title', namespace) if 'ns' in locals() else None location_element = track.find('ns:location', namespace) 
-
+        # Try namespace search first, then wildcard tag search
+        title_element = track.find('ns:title', namespace)
         # Extract text if the elements exist
         if title_element is None:
-            title_element = track.find('{*}title')
+            title_element = track.find('.//{*}title')
 
         location_element = track.find('ns:location', namespace) if 'ns' in locals() else None
 
@@ -66,13 +68,13 @@ def parse_xspf_playlist(file_path):
         location = location_element.text if location_element is not None and location_element.text else "Unknown Location"
 
         # VLC encodes local file paths as URLs (e.g., file:///C:/Music/song.mp3)
-        # Replace troublesome zero-width spaces manually
+        # Decode URL encoding (%20 -> space) and remove zero-width spaces
         clean_path = unquote(location).replace('\u200b', '')
 
         # Collect into dictionary so the returned list has data
         songs.append({"title": title, "path": clean_path})            
 
-    output_playlist(file_path, songs)
+    output_playlist(file_path, songs) 
 
     return None
 
