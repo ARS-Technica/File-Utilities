@@ -77,6 +77,9 @@ def parse_xspf_playlist(file_path):
         elif clean_path.startswith('file://'):
             clean_path = clean_path[7:]
 
+        # Convert forward slashes to Windows backslashes
+        clean_path = clean_path.replace('/', '\\')
+
         # Collect into dictionary so the returned list has data
         songs.append({"title": title, "path": clean_path})            
 
