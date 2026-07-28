@@ -115,9 +115,8 @@ def parse_m3u_playlist(file_path):
                 songs.append({"title": current_title, "path": clean_path})
                 current_title = "Unknown Title"  # Reset for next track            
 
-    output_playlist(file_path, songs)
-
-    return None
+    # Returns the completed list after file is closed
+    return songs
 
 
 def output_playlist(file_path, playlist):
