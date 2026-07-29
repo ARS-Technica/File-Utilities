@@ -145,6 +145,20 @@ def output_playlist(file_path, playlist):
 
 
 def relocate_paths(songs):
+    """
+    Prompts user for find-and-replace strings to rewrite track paths.
+    """
+    print("\n--- RELOCATE MUSIC DIRECTORY ---")
+    # Prompt for the new path segment to replace it with
+    new_segment = input("Enter the new path text (e.g., D:\\NewFolder): ").strip().strip("'\"")
+
+    # End function if no new path segment is entered as a replacement
+    if not old_segment:
+        print("No search text entered. Skipping path relocation.")
+        return songs   
+
+    # Prompt for the text to replace old path segment
+    new_segment = input("Enter the new replacement path text (e.g., D:\\NewFolder): ").strip().strip("'\"")
 
     return None
 
