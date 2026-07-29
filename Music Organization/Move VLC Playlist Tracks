@@ -3,7 +3,12 @@ Move VLC Playlist Tracks
 Created: July 27, 2026
 
 Description: A utility to fix broken playlists when moving music to a new hard 
-            drive or folder.
+            drive or folder.  This program will parse a VLC playlist file 
+            (.xspf, .m3u, or .m3u8), extract the track paths, and allow the user 
+            to replace an old path with a new one. The updated playlist can then 
+            be saved to a new file.
+
+            This program is an extention of the "List VLC Playlist Tracks" script, which extracts and displays the tracks in a playlist.
 
 
 1. Extract tracks from the playlist.
@@ -23,7 +28,6 @@ from urllib.parse import unquote  # For decoding URL-encoded paths
 import xml.etree.ElementTree as ET
 
 
-# Force stdout to use UTF-8 if the environment supports it
 # Force stdout to use UTF-8 if standard stream supports reconfigure
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.recon
@@ -31,7 +35,7 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 def parse_xspf_playlist(file_path):
     """
-    Parses XML-based VLC playlists.
+    Parses XML-based XSPF playlists safely with or without namespaces.
     """
     songs = []
 
@@ -87,7 +91,7 @@ def parse_xspf_playlist(file_path):
         # Collect into dictionary so the returned list has data
         songs.append({"title": title, "path": clean_path})            
 
-    output_playlist(file_path, songs) 
+    # output_playlist(file_path, songs) 
 
     return songs
 
@@ -119,14 +123,14 @@ def parse_m3u_playlist(file_path):
                 songs.append({"title": current_title, "path": clean_path})
                 current_title = "Unknown Title"  # Reset for next track            
 
-    output_playlist(file_path, songs)
+    # output_playlist(file_path, songs)
 
     return None
 
 
 def output_playlist(file_path, playlist):
     """
-    Outputs the playlist to the console.
+    Prints out all track titles and paths to the console.
     """
     print(f"There are {len(playlist)} songs in this playlist.")
     print(f"Tracks found in {file_path}:\n")
@@ -136,6 +140,11 @@ def output_playlist(file_path, playlist):
 
         print(f"Title: {song['title']}")
         print(f"Path/URL: {song['path']}\n", flush=True)  
+
+    return None
+
+
+def relocate_paths(songs):
 
     return None
 
