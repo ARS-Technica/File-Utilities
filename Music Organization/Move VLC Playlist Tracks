@@ -181,6 +181,20 @@ def relocate_paths(songs):
     # Prompt for the text to replace old path segment
     new_segment = input("Enter the new replacement path text (e.g., D:\\NewFolder): ").strip().strip("'\"")
 
+    replacements_count = 0
+    updated_songs = []
+
+    for song in songs:
+        original_path = song['path']
+        if old_segment.lower() in original_path.lower():
+            new_path = original_path.replace(old_segment, new_segment)
+            replacements_count += 1
+        else:
+            new_path = original_path
+
+        updated_songs.append({"title": song['title'], "path": new_path})
+
+    print(f"\nReplacement complete! Updated paths for {replacements_count} out of {len(songs)} tracks.")
     return updated_songs
 
 
