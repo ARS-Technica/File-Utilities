@@ -171,7 +171,7 @@ def relocate_paths(songs):
     """
     print("\n--- RELOCATE MUSIC DIRECTORY ---")
     # Prompt for the new path segment to replace it with
-    new_segment = input("Enter the new path text (e.g., D:\\NewFolder): ").strip().strip("'\"")
+    old_segment = input("Enter the path text to search/replace (e.g., C:\\OldFolder): ").strip().strip("'\"")
 
     # End function if no new path segment is entered as a replacement
     if not old_segment:
@@ -181,7 +181,7 @@ def relocate_paths(songs):
     # Prompt for the text to replace old path segment
     new_segment = input("Enter the new replacement path text (e.g., D:\\NewFolder): ").strip().strip("'\"")
 
-    return None
+    return updated_songs
 
 
 def save_playlist_to_file(playlist_path, songs):
