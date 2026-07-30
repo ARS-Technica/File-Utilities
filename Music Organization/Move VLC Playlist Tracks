@@ -102,6 +102,7 @@ def parse_m3u_playlist(file_path):
     """
     songs = []
 
+    # All reading happens INSIDE this with block
     with open(file_path, 'r', encoding='utf-8', errors='ignore') as file:
         current_title = "Unknown Title"
         for line in file:
