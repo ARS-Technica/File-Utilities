@@ -135,11 +135,18 @@ def output_playlist(file_path, playlist):
     print(f"There are {len(playlist)} songs in this playlist.")
     print(f"Tracks found in {file_path}:\n")
 
+    for idx, song in enumerate(songs, start=1):
+        print(f"[{idx}] Title: {song['title']}")
+        print(f"    Path : {song['path']}\n", flush=True)
+    print("=" * 60)
+
+    """
     for song in playlist:
         # print(f"Title: {song['title']}, Path: {song['path']}")
 
         print(f"Title: {song['title']}")
         print(f"Path/URL: {song['path']}\n", flush=True)  
+    """
 
     return None
 
