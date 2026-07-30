@@ -1,18 +1,26 @@
 """
-Print out VLC Playlist Tracks
-Created: July 18, 2026
+Move VLC Playlist Tracks
+Created: July 27, 2026
 
-Description: Use Python to read VLC playlist files (.xspf, .m3u, .m3u8) 
-             and export track details into a clean text file locally.
+Description: A utility to fix broken playlists when moving music to a new hard 
+            drive or folder.  This program will parse a VLC playlist file 
+            (.xspf, .m3u, or .m3u8), extract the track paths, and allow the user 
+            to replace an old path with a new one. The updated playlist can then 
+            be saved to a new file.
 
-An XSPF (XML Shareable Playlist Format) file is a 
-type of XML file. You can read it using Python's 
-built-in xml.etree.ElementTree library to find all the 
-track locations.
+            This program is an extention of the "List VLC Playlist Tracks" script, which extracts and displays the tracks in a playlist.
+
+
+1. Extract tracks from the playlist.
+2. Display all tracks in the console.
+3. Prompt the user for the old path string to find (e.g., C://Users//old_name//Music).
+4.Prompt the user for the new path string to replace it with (e.g., D://Audio//Music).
+5. Iterate through the songs list and apply .replace(old, new) to each path.
+6. Display the modified tracks.
+7. Save the newly updated playlist file.
 """
 
-from email import header
-from logging import root
+# from logging import root
 import os # For prompting user for a file path
 from pathlib import Path # For parsing and validating file paths
 import sys # Reconfigures filenames to UTF-8 to avoid UnicodeDecodeError when printing paths
@@ -20,14 +28,14 @@ from urllib.parse import unquote  # For decoding URL-encoded paths
 import xml.etree.ElementTree as ET
 
 
-# Force stdout to use UTF-8 if the environment supports reconfigure 
+# Force stdout to use UTF-8 if standard stream supports reconfigure
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 
 def parse_xspf_playlist(file_path):
     """
-    Parses XML-based VLC playlists.
+    Parses XML-based XSPF playlists safely with or without namespaces.
     """
     songs = []
 
@@ -81,7 +89,7 @@ def parse_xspf_playlist(file_path):
         clean_path = clean_path.replace('/', '\\')
 
         # Collect into dictionary so the returned list has data
-        songs.append({"title": title, "path": clean_path})            
+        songs.append({"title": title, "path": clean_path})
 
     # output_playlist(file_path, songs) 
 
@@ -94,6 +102,7 @@ def parse_m3u_playlist(file_path):
     """
     songs = []
 
+    # All reading happens INSIDE this with block
     with open(file_path, 'r', encoding='utf-8', errors='ignore') as file:
         current_title = "Unknown Title"
         for line in file:
@@ -112,29 +121,53 @@ def parse_m3u_playlist(file_path):
             # Standard line is the actual path/URL
             elif not line.startswith("#"):
                 clean_path = unquote(line).replace('\u200b', '')
+                clean_path = clean_path.replace('/', '\\')
                 songs.append({"title": current_title, "path": clean_path})
                 current_title = "Unknown Title"  # Reset for next track            
 
     # output_playlist(file_path, songs)
 
-    return songs
+    return None
 
 
 def output_playlist(file_path, playlist, header=""):
     """
     Outputs the playlist to the console.
     """
-    if header:
-        print(f"\n=== {header} ===")
-
     print(f"There are {len(playlist)} songs in this playlist.")
     print(f"Tracks found in {file_path}:\n")
 
+    for idx, song in enumerate(songs, start=1):
+        print(f"[{idx}] Title: {song['title']}")
+        print(f"    Path : {song['path']}\n", flush=True)
+    print("=" * 60)
+
+    """
     for song in playlist:
         # print(f"Title: {song['title']}, Path: {song['path']}")
 
         print(f"Title: {song['title']}")
         print(f"Path/URL: {song['path']}\n", flush=True)  
+    """
+
+    return None
+
+
+def relocate_paths(songs):
+    """
+    Prompts user for find-and-replace strings to rewrite track paths.
+    """
+    print("\n--- RELOCATE MUSIC DIRECTORY ---")
+    # Prompt for the new path segment to replace it with
+    new_segment = input("Enter the new path text (e.g., D:\\NewFolder): ").strip().strip("'\"")
+
+    # End function if no new path segment is entered as a replacement
+    if not old_segment:
+        print("No search text entered. Skipping path relocation.")
+        return songs   
+
+    # Prompt for the text to replace old path segment
+    new_segment = input("Enter the new replacement path text (e.g., D:\\NewFolder): ").strip().strip("'\"")
 
     return None
 
@@ -209,18 +242,26 @@ def main():
         ext = file_path.suffix.lower()
 
         if ext in extensions:
+            # 1. Parse tracks
             # Route to the correct parsing function based on extension
-            if ext == '.xspf':
-                songs = parse_xspf_playlist(file_path)
-            else:
-                songs = parse_m3u_playlist(file_path)
+            songs = parse_xspf_playlist(file_path) if ext == '.xspf' else parse_m3u_playlist(file_path)
 
-            # Check that there are tracks in the playlist before attempting to save
-            if songs:
-                save_playlist_to_file(file_path, songs)
-            else:
+            # If there aren't any tracks, exit early to avoid unnecessary prompts
+            if not songs:
                 print("\nNo tracks found in the specified playlist file.")
+                return
 
+            # 2. Display initial tracks
+            output_playlist(songs)
+
+            # 3. Prompt for Find & Replace
+            updated_songs = relocate_paths(songs)
+
+            # 4. Display updated tracks if changes were made
+            output_playlist(updated_songs)
+
+            # 5. Save output text file
+            save_playlist_to_file(file_path, updated_songs)
         else:
             print(f"\nError: '{ext}' is not a supported playlist format. Please use .xspf, .m3u, or .m3u8.")
     else:
