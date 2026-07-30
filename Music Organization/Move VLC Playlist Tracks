@@ -214,6 +214,7 @@ def save_playlist_to_file(playlist_path, songs):
         with open(output_path, 'w', encoding='utf-8') as out_file:
             out_file.write(f"Playlist Track Export: {playlist_file.name}\n")
             out_file.write(f"Total Tracks: {len(songs)}\n")
+            out_file.write("=" * 60 + "\n\n")
 
             for idx, song in enumerate(songs, start=1):
                 out_file.write(f"Track {idx}:\n")
@@ -223,11 +224,11 @@ def save_playlist_to_file(playlist_path, songs):
         print(f"\nSuccessfully exported {len(songs)} tracks to:")
         print(f"{output_path.resolve()}")
 
-        return output_path
+        # return output_path
 
     except Exception as e:
         print(f"\nError saving text file: {e}")
-        return None
+        # return None
 
 
 def main():
@@ -270,26 +271,30 @@ def main():
         if ext in extensions:
             # 1. Parse tracks
             # Route to the correct parsing function based on extension
-            songs = parse_xspf_playlist(file_path) if ext == '.xspf' else parse_m3u_playlist(file_path)
+            # songs = parse_xspf_playlist(file_path) if ext == '.xspf' else parse_m3u_playlist(file_path)
+            if ext == '.xspf':
+                songs = parse_xspf_playlist(file_path)
+            else:
+                songs = parse_m3u(file_path)
 
             # If there aren't any tracks, exit early to avoid unnecessary prompts
             if not songs:
                 print("\nNo tracks found in the specified playlist file.")
                 return
 
-            # 2. Display initial tracks
-            output_playlist(songs)
+            # 2. Display initial playlist
+            output_playlist(file_path, songs, header="ORIGINAL PLAYLIST")
 
             # 3. Prompt for Find & Replace
             updated_songs = relocate_paths(songs)
 
             # 4. Display updated tracks if changes were made
-            output_playlist(updated_songs)
+            output_playlist(file_path, updated_songs, header="UPDATED PLAYLIST")
 
             # 5. Save output text file
             save_playlist_to_file(file_path, updated_songs)
         else:
-            print(f"\nError: '{ext}' is not a supported playlist format. Please use .xspf, .m3u, or .m3u8.")
+            print(f"\nError: '{ext}' is not a supported playlist format.\nPlease input a .xspf, .m3u, or .m3u8 file.")
     else:
         print(f"\nError: Could not find a file at '{file_path}'. Please check the path and try again.")
 
