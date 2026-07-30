@@ -241,6 +241,13 @@ def main():
         ext = file_path.suffix.lower()
 
         if ext in extensions:
+            # 1. Parse tracks
+            songs = parse_xspf_playlist(file_path) if ext == '.xspf' else parse_m3u(file_path)
+
+            if not songs:
+                print("\nNo tracks found in the specified playlist file.")
+                return
+
             # Route to the correct parsing function based on extension
             if ext == '.xspf':
                 songs = parse_xspf_playlist(file_path)
