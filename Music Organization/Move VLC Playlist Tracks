@@ -21,6 +21,7 @@ Description: A utility to fix broken playlists when moving music to a new hard
 """
 
 # from logging import root
+from email import header
 import os # For prompting user for a file path
 from pathlib import Path # For parsing and validating file paths
 import sys # Reconfigures filenames to UTF-8 to avoid UnicodeDecodeError when printing paths
@@ -134,13 +135,24 @@ def output_playlist(file_path, playlist, header=""):
     """
     Outputs the playlist to the console.
     """
+    if header:
+        print(f"\n=== {header} ===")
+
     print(f"There are {len(playlist)} songs in this playlist.")
     print(f"Tracks found in {file_path}:\n")
 
+    for song in playlist:
+        # print(f"Title: {song['title']}, Path: {song['path']}")
+
+        print(f"Title: {song['title']}")
+        print(f"Path/URL: {song['path']}\n", flush=True)  
+
+    """
     for idx, song in enumerate(songs, start=1):
         print(f"[{idx}] Title: {song['title']}")
         print(f"    Path : {song['path']}\n", flush=True)
     print("=" * 60)
+    """
 
     """
     for song in playlist:
