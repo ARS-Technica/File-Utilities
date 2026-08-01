@@ -224,10 +224,17 @@ def save_new_playlist(original_playlist_path, songs):
     matching the original format (.xspf or .m3u).
     """
     playlist_file = Path(original_playlist_path)
-    # Create output filename: e.g., 'favorites_relocated.xspf'
+    ext = playlist_file.suffix.lower()
 
-    try:
-        pass
+    # Create output filename: e.g., 'favorites_relocated.xspf'
+    output_filename = f"{playlist_file.stem}_relocated{ext}" # Change output name!
+    output_path = playlist_file.parent / output_filename
+
+    try: # Yes, this needs to be a try/except block to catch any file writing errors
+        if ext == '.xspf':
+            export_as_xspf(output_path, songs)
+        else:
+            export_as_m3u(output_path, songs)
 
     except Exception as e:
         print(f"\nError saving playlist file: {e}")
