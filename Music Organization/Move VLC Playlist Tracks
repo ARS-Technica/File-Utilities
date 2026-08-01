@@ -340,6 +340,13 @@ def main():
 
             # 5. Save output text file
             save_playlist_to_file(file_path, updated_songs)
+
+            # 6. Prompt user if they want to view the new tracks
+            if new_file_path:
+                show_new = input("\nWould you like to display the tracks and filepaths of the new playlist? (y/n): ").strip().lower()
+                if show_new in ('y', 'yes', 'Yes', 'Y', 'YES', 'yEs', 'yeS',  'YEs', 'YeS'):
+                    output_playlist(new_file_path, updated_songs, header="NEW RELOCATED PLAYLIST")
+
         else:
             print(f"\nError: '{ext}' is not a supported playlist format.\nPlease input a .xspf, .m3u, or .m3u8 file.")
     else:
