@@ -188,7 +188,7 @@ def relocate_paths(songs):
     """
     Prompts user for find-and-replace strings to rewrite track paths.
     """
-    print("\n----- RELOCATE MUSIC DIRECTORY -----")
+    print("\nRELOCATE MUSIC DIRECTORY?")
 
     # Prompt for the new path segment to replace it with
     old_segment = input("Enter the path text to search/replace (e.g., C:\\OldFolder): ").strip().strip("'\"")
@@ -218,7 +218,7 @@ def relocate_paths(songs):
     return updated_songs
 
 
-def save_new_playlist(original_playlist_path, songs):
+def save_playlist_to_file(original_playlist_path, songs):
     """
     Save the updated songs into a brand-new playlist file 
     matching the original format (.xspf or .m3u).
