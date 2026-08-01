@@ -38,8 +38,12 @@ def export_as_m3u(output_path, songs):
     """
     Write updated song tracks to an .m3u (plain text) playlist file.
     """
+    with open(output_path, "w", encoding="utf-8") as file:
+        file.write("#EXTM3U\n")
 
-    pass
+        for song in songs:
+            file.write(f"#EXTINF:-1,{song['title']}\n")
+            file.write(f"{song['path']}\n")
 
 
 def export_as_xspf(output_path, songs):
