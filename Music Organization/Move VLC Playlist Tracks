@@ -34,6 +34,41 @@ if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 
+def export_as_m3u(output_path, songs):
+    """
+    Write updated song tracks to an .m3u (plain text) playlist file.
+    """
+
+    pass
+
+
+def export_as_xspf(output_path, songs):
+    """
+    Write updated song tracks to an .xspf (XML) playlist file.
+    """
+
+    pass
+
+
+def output_playlist(file_path, playlist, header=""):
+    """
+    Outputs the playlist to the console.
+    """
+    if header:
+        print(f"\n=== {header} ===")
+
+    print(f"There are {len(playlist)} songs in this playlist.")
+    print(f"Tracks found in {file_path}:\n")
+
+    for song in playlist:
+        # print(f"Title: {song['title']}, Path: {song['path']}")
+        print(f"Title: {song['title']}")
+        print(f"Path/URL: <{song['path']}>\n", flush=True)
+        # wrapping the path string in angle brackets < and > signals to terminal parsers that the entire enclosed string is a single path unit
+
+    return None
+
+
 def parse_xspf_playlist(file_path):
     """
     Parses XML-based XSPF playlists safely with or without namespaces.
@@ -131,29 +166,12 @@ def parse_m3u_playlist(file_path):
     return None
 
 
-def output_playlist(file_path, playlist, header=""):
-    """
-    Outputs the playlist to the console.
-    """
-    if header:
-        print(f"\n=== {header} ===")
-
-    print(f"There are {len(playlist)} songs in this playlist.")
-    print(f"Tracks found in {file_path}:\n")
-
-    for song in playlist:
-        # print(f"Title: {song['title']}, Path: {song['path']}")
-        print(f"Title: {song['title']}")
-        print(f"Path/URL: <{song['path']}>\n", flush=True)
-        # wrapping the path string in angle brackets < and > signals to terminal parsers that the entire enclosed string is a single path unit
-
-    return None
-
-
 def relocate_paths(songs):
     """
     Prompts user for find-and-replace strings to rewrite track paths.
     """
+    print("\n----- RELOCATE MUSIC DIRECTORY -----")
+
     # Prompt for the new path segment to replace it with
     old_segment = input("Enter the path text to search/replace (e.g., C:\\OldFolder): ").strip().strip("'\"")
 
@@ -182,6 +200,15 @@ def relocate_paths(songs):
     return updated_songs
 
 
+def save_new_playlist(original_playlist_path, songs):
+    """
+    Save the updated songs into a brand-new playlist file 
+    matching the original format (.xspf or .m3u).
+    """
+
+    pass
+
+'''
 def save_playlist_to_file(playlist_path, songs):
     """
     Saves the extracted track details into a text file in the same 
@@ -213,6 +240,7 @@ def save_playlist_to_file(playlist_path, songs):
     except Exception as e:
         print(f"\nError saving text file: {e}")
         # return None
+'''
 
 
 def main():
