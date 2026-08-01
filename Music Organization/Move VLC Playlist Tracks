@@ -21,11 +21,10 @@ Description: A utility to fix broken playlists when moving music to a new hard
 """
 
 # from logging import root
-from email import header
 import os # For prompting user for a file path
 from pathlib import Path # For parsing and validating file paths
 import sys # Reconfigures filenames to UTF-8 to avoid UnicodeDecodeError when printing paths
-from urllib.parse import unquote  # For decoding URL-encoded paths
+from urllib.parse import unquote, quote  # For decoding URL-encoded paths
 import xml.etree.ElementTree as ET
 
 
@@ -54,8 +53,18 @@ def export_as_xspf(output_path, songs):
     track_list = ET.SubElement(root, "trackList")
 
     for song in songs:
-        pass 
+        track = ET.SubElement(track_list, "track")
 
+        title_el = ET.SubElement(track, "title")
+        title_el.text = song['title']
+
+        location_el = ET.SubElement(track, "location")
+        clean_path = song['path'].replace('\\', '/')
+        encoded_uri = "file:///" + quote(clean_path, safe="/:")
+        location_el.text = encoded_uri
+
+    tree = ET.ElementTree(root)
+    ET.indent(tree, space="  ")
     tree.write(output_path, encoding="utf-8", xml_declaration=True)
 
 
