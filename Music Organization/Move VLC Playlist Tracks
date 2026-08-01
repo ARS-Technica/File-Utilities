@@ -66,23 +66,33 @@ def export_as_xspf(output_path, songs):
     tree = ET.ElementTree(root)
     ET.indent(tree, space="  ")
     tree.write(output_path, encoding="utf-8", xml_declaration=True)
-
+   
 
 def output_playlist(file_path, playlist, header=""):
     """
     Outputs the playlist to the console.
     """
-    if header:
-        print(f"\n=== {header} ===")
+    # Prompt user if they want to view the new track filepaths
+    show_review = input("\nWould you like to review the new file paths of this playlist? (y/n): ").strip().lower()
 
-    print(f"There are {len(playlist)} songs in this playlist.")
-    print(f"Tracks found in {file_path}:\n")
+    if show_review in ('y', 'yes', 'ye', 'es', 'ys'):
+        print("\nRELOCATED MUSIC DIRECTORY:")
 
-    for song in playlist:
-        # print(f"Title: {song['title']}, Path: {song['path']}")
-        print(f"Title: {song['title']}")
-        print(f"Path/URL: <{song['path']}>\n", flush=True)
-        # wrapping the path string in angle brackets < and > signals to terminal parsers that the entire enclosed string is a single path unit
+        if header:
+            print(f"\n=== {header} ===")
+
+        print(f"There are {len(playlist)} songs in this playlist.")
+        print(f"Tracks found in {file_path}:\n")
+
+        # Display updated tracks if changes were made
+        for song in playlist:
+            # print(f"Title: {song['title']}, Path: {song['path']}")
+            print(f"Title: {song['title']}")
+            print(f"Path/URL: <{song['path']}>\n", flush=True)
+            # wrapping the path string in angle brackets < and > signals to terminal parsers that the entire enclosed string is a single path unit
+    else:
+        print("\nNo changes will be made to the playlist tracks.")
+        return None
 
     return None
 
@@ -190,7 +200,7 @@ def relocate_paths(songs):
     """
     # Prompt user if they want to view the new tracks
     show_new = input("\nWould you like to relocate the tracks of this playlist? (y/n): ").strip().lower()
-    if show_new in ('y', 'yes', 'Yes', 'Y', 'YES', 'yEs', 'yeS',  'YEs', 'YeS', 'ye', 'Ye', 'yE'):
+    if show_new in ('y', 'yes', 'ye', 'es', 'ys'):
         print("\nRELOCATE MUSIC DIRECTORY:")
         # Prompt for the new path segment to replace it with
         old_segment = input("Enter the path text to replace (e.g., C:\\OldFolder): ").strip().strip("'\"")
@@ -305,18 +315,10 @@ def main():
             # 3. Prompt for Find & Replace
             updated_songs = relocate_paths(songs)
 
-            # 4. Prompt user if they want to view the new track filepaths
-            show_review = input("\nWould you like to review the new file paths of this playlist? (y/n): ").strip().lower()
-            if show_review in ('y', 'yes', 'Yes', 'Y', 'YES', 'yEs', 'yeS',  'YEs', 'YeS', 'ye', 'Ye', 'yE'):
-                print("\nRELOCATED MUSIC DIRECTORY:")
+            # 4. Display updated tracks if changes were made
+            output_playlist(file_path, updated_songs, header="\nRELOCATED MUSIC DIRECTORY:")
 
-                # 5. Display updated tracks if changes were made
-                output_playlist(file_path, updated_songs, header="UPDATED PLAYLIST")
-            else:
-                print("\nNo changes will be made to the playlist tracks.")
-                return None
-
-            # 6. Save output text file
+            # 5. Save output text file
             save_playlist_to_file(file_path, updated_songs)          
 
         else:
