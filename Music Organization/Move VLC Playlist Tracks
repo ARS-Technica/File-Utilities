@@ -188,10 +188,15 @@ def relocate_paths(songs):
     """
     Prompts user for find-and-replace strings to rewrite track paths.
     """
-    print("\nRELOCATE MUSIC DIRECTORY?")
-
-    # Prompt for the new path segment to replace it with
-    old_segment = input("Enter the path text to search/replace (e.g., C:\\OldFolder): ").strip().strip("'\"")
+    # Prompt user if they want to view the new tracks
+    show_new = input("\nWould you like to relocate the tracks of this playlist? (y/n): ").strip().lower()
+    if show_new in ('y', 'yes', 'Yes', 'Y', 'YES', 'yEs', 'yeS',  'YEs', 'YeS', 'ye', 'Ye', 'yE'):
+        print("\nRELOCATE MUSIC DIRECTORY:")
+        # Prompt for the new path segment to replace it with
+        old_segment = input("Enter the path text to search/replace (e.g., C:\\OldFolder): ").strip().strip("'\"")
+    else:
+        print("\nNo changes will be made to the playlist tracks.")
+        return None
 
     # End function if no new path segment is entered as a replacement
     if not old_segment:
@@ -322,7 +327,7 @@ def main():
             if ext == '.xspf':
                 songs = parse_xspf_playlist(file_path)
             else:
-                songs = parse_m3u(file_path)
+                songs = parse_m3u_playlist(file_path)
 
             # If there aren't any tracks, exit early to avoid unnecessary prompts
             if not songs:
@@ -339,13 +344,7 @@ def main():
             output_playlist(file_path, updated_songs, header="UPDATED PLAYLIST")
 
             # 5. Save output text file
-            save_playlist_to_file(file_path, updated_songs)
-
-            # 6. Prompt user if they want to view the new tracks
-            if new_file_path:
-                show_new = input("\nWould you like to display the tracks and filepaths of the new playlist? (y/n): ").strip().lower()
-                if show_new in ('y', 'yes', 'Yes', 'Y', 'YES', 'yEs', 'yeS',  'YEs', 'YeS'):
-                    output_playlist(new_file_path, updated_songs, header="NEW RELOCATED PLAYLIST")
+            save_playlist_to_file(file_path, updated_songs)          
 
         else:
             print(f"\nError: '{ext}' is not a supported playlist format.\nPlease input a .xspf, .m3u, or .m3u8 file.")
