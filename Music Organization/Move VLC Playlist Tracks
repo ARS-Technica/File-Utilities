@@ -236,6 +236,9 @@ def save_new_playlist(original_playlist_path, songs):
         else:
             export_as_m3u(output_path, songs)
 
+        print(f"\nSuccessfully compiled new playlist file!")
+        print(f"Located at: {output_path.resolve()}")
+
     except Exception as e:
         print(f"\nError saving playlist file: {e}")
 
