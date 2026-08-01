@@ -50,8 +50,13 @@ def export_as_xspf(output_path, songs):
     """
     Write updated song tracks to an .xspf (XML) playlist file.
     """
+    root = ET.Element("playlist", version="1", xmlns="http://xspf.org/ns/0/")
+    track_list = ET.SubElement(root, "trackList")
 
-    pass
+    for song in songs:
+        pass 
+
+    tree.write(output_path, encoding="utf-8", xml_declaration=True)
 
 
 def output_playlist(file_path, playlist, header=""):
@@ -209,8 +214,15 @@ def save_new_playlist(original_playlist_path, songs):
     Save the updated songs into a brand-new playlist file 
     matching the original format (.xspf or .m3u).
     """
+    playlist_file = Path(original_playlist_path)
+    # Create output filename: e.g., 'favorites_relocated.xspf'
 
-    pass
+    try:
+        pass
+
+    except Exception as e:
+        print(f"\nError saving playlist file: {e}")
+
 
 '''
 def save_playlist_to_file(playlist_path, songs):
