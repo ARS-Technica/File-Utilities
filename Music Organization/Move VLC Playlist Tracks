@@ -193,7 +193,7 @@ def relocate_paths(songs):
     if show_new in ('y', 'yes', 'Yes', 'Y', 'YES', 'yEs', 'yeS',  'YEs', 'YeS', 'ye', 'Ye', 'yE'):
         print("\nRELOCATE MUSIC DIRECTORY:")
         # Prompt for the new path segment to replace it with
-        old_segment = input("Enter the path text to search/replace (e.g., C:\\OldFolder): ").strip().strip("'\"")
+        old_segment = input("Enter the path text to replace (e.g., C:\\OldFolder): ").strip().strip("'\"")
     else:
         print("\nNo changes will be made to the playlist tracks.")
         return None
@@ -246,41 +246,6 @@ def save_playlist_to_file(original_playlist_path, songs):
 
     except Exception as e:
         print(f"\nError saving playlist file: {e}")
-
-
-'''
-def save_playlist_to_file(playlist_path, songs):
-    """
-    Saves the extracted track details into a text file in the same 
-    directory as the input playlist file.
-    """
-    playlist_file = Path(playlist_path)
-
-    # Create output filename: e.g., 'favorites.txt'
-    output_filename = f"{playlist_file.stem}.txt"
-    output_path = playlist_file.parent / output_filename
-
-    try:
-        # All .write() operations MUST happen inside this 'with' block
-        with open(output_path, 'w', encoding='utf-8') as out_file:
-            out_file.write(f"Playlist Track Export: {playlist_file.name}\n")
-            out_file.write(f"Total Tracks: {len(songs)}\n")
-            out_file.write("=" * 60 + "\n\n")
-
-            for idx, song in enumerate(songs, start=1):
-                out_file.write(f"Track {idx}:\n")
-                out_file.write(f"  Title: {song['title']}\n")
-                out_file.write(f"  Path : {song['path']}\n\n")
-
-        print(f"\nSuccessfully exported {len(songs)} tracks to:")
-        print(f"{output_path.resolve()}")
-
-        # return output_path
-
-    except Exception as e:
-        print(f"\nError saving text file: {e}")
-        # return None
-'''
 
 
 def main():
