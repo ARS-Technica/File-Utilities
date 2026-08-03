@@ -238,12 +238,19 @@ def save_playlist_to_file(original_playlist_path, songs):
     Save the updated songs into a brand-new playlist file 
     matching the original format (.xspf or .m3u).
     """
-    playlist_file = Path(original_playlist_path)
-    ext = playlist_file.suffix.lower()
+    # Resolve the path to fetch its on-disk name from Windows
+    playlist_file = Path(original_playlist_path).resolve() #resolve is case-sensitive
+
+    # Extract stem and suffix matching the actual file on disk
+    original_stem = playlist_file.stem      # e.g. 'Favorites'
+    original_ext = playlist_file.suffix     # e.g. '.XSPF'
+    # This prevents all output files from being saved as lowercase filesnames
 
     # Create output filename: e.g., 'favorites_relocated.xspf'
     output_filename = f"{playlist_file.stem}_relocated{ext}" # Change output name!
     output_path = playlist_file.parent / output_filename
+
+    ext = playlist_file.suffix.lower()
 
     try: # Yes, this needs to be a try/except block to catch any file writing errors
         if ext == '.xspf':
