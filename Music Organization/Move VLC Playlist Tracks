@@ -319,10 +319,8 @@ def main():
             # 3. Prompt for Find & Replace
             updated_songs = relocate_paths(songs)
 
-
-
-
-
+            # 4. Display updated tracks if changes were made
+            new_file_path = save_new_playlist(file_path, updated_songs)
 
             # 5. Prompt user if they want to view the new tracks
             if new_file_path:
@@ -332,13 +330,8 @@ def main():
                 if show_review in ('y', 'yes', 'ye', 'es', 'ys'):
                     output_playlist(file_path, updated_songs, header="\nRELOCATED MUSIC DIRECTORY:")
 
-
-
-
-
-
-            # 5. Save output text file
-            save_playlist_to_file(file_path, updated_songs)          
+            # 6. Save output text file
+            save_playlist_to_file(file_path, updated_songs)
 
         else:
             print(f"\nError: '{ext}' is not a supported playlist format.\nPlease input a .xspf, .m3u, or .m3u8 file.")
