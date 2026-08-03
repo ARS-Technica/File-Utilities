@@ -252,10 +252,12 @@ def save_playlist_to_file(original_playlist_path, songs):
             export_as_m3u(output_path, songs)
 
         print(f"\nSuccessfully compiled new playlist file!")
-        print(f"Located at: {output_path.resolve()}")
+        # print(f"Located at: {output_path.resolve()}")
+        # resolve() can rewrite casing based on Windows' drive index
+        print(f"Located at: {output_path}")
 
         # Return the output path so main() knows where the new file is
-        return output_path        
+        return output_path
 
     except Exception as e:
         print(f"\nError saving playlist file: {e}")
@@ -345,4 +347,3 @@ if __name__ == "__main__":
 
 # Playlist for Debuggin
 # C:\Users\andre\Music\Z Playlist Backups\favorites.xspf
-
