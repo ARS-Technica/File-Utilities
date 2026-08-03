@@ -319,8 +319,23 @@ def main():
             # 3. Prompt for Find & Replace
             updated_songs = relocate_paths(songs)
 
-            # 4. Display updated tracks if changes were made
-            output_playlist(file_path, updated_songs, header="\nRELOCATED MUSIC DIRECTORY:")
+
+
+
+
+
+            # 5. Prompt user if they want to view the new tracks
+            if new_file_path:
+                # Prompt user if they want to view the new track filepaths
+                show_review = input("\nWould you like to review the new file paths of this playlist? (y/n): ").strip().lower()
+
+                if show_review in ('y', 'yes', 'ye', 'es', 'ys'):
+                    output_playlist(file_path, updated_songs, header="\nRELOCATED MUSIC DIRECTORY:")
+
+
+
+
+
 
             # 5. Save output text file
             save_playlist_to_file(file_path, updated_songs)          
