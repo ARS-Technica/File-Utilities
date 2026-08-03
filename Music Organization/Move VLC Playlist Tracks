@@ -254,8 +254,12 @@ def save_playlist_to_file(original_playlist_path, songs):
         print(f"\nSuccessfully compiled new playlist file!")
         print(f"Located at: {output_path.resolve()}")
 
+        # Return the output path so main() knows where the new file is
+        return output_path        
+
     except Exception as e:
         print(f"\nError saving playlist file: {e}")
+        return None
 
 
 def main():
