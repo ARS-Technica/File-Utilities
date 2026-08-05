@@ -72,14 +72,6 @@ def output_playlist(file_path, playlist, header=""):
     """
     Outputs the playlist to the console.
     """
-    """
-    # Prompt user if they want to view the new track filepaths
-    show_review = input("\nWould you like to review the new file paths of this playlist? (y/n): ").strip().lower()
-
-    if show_review in ('y', 'yes', 'ye', 'es', 'ys'):
-        print("\nRELOCATED MUSIC DIRECTORY:")
-    """
-
     if header:
         print(f"\n=== {header} ===")
 
@@ -92,12 +84,6 @@ def output_playlist(file_path, playlist, header=""):
         print(f"Title: {song['title']}")
         print(f"Path/URL: <{song['path']}>\n", flush=True)
         # wrapping the path string in angle brackets < and > signals to terminal parsers that the entire enclosed string is a single path unit
-
-    """
-    else:
-        print("\nNo changes will be made to the playlist tracks.")
-        return None
-    """
 
     return None
 
@@ -196,7 +182,7 @@ def parse_m3u_playlist(file_path):
 
     # output_playlist(file_path, songs)
 
-    return None
+    return songs
 
 
 def relocate_paths(songs):
@@ -204,7 +190,9 @@ def relocate_paths(songs):
     Prompts user for find-and-replace strings to rewrite track paths.
     """
     # Prompt user if they want to view the new tracks
-    show_new = input("\nWould you like to relocate the tracks of this playlist? (y/n): ").strip().lower()
+    old_segment = input("\nWould you like to relocate the tracks of this playlist? (y/n): ").strip().lower()
+
+    '''
     if show_new in ('y', 'yes', 'ye', 'es', 'ys'):
         print("\nRELOCATE MUSIC DIRECTORY:")
         # Prompt for the new path segment to replace it with
@@ -212,6 +200,7 @@ def relocate_paths(songs):
     else:
         print("\nNo changes will be made to the playlist tracks.")
         return None
+    '''
 
     # End function if no new path segment is entered as a replacement
     if not old_segment:
@@ -339,6 +328,8 @@ def save_playlist_to_file(original_playlist_path, songs):
         return None
 
 
+
+
 def main():
     """
     Main function to execute the playlist parsing logic.
@@ -420,7 +411,7 @@ def main():
                 if new_name:
                     new_file_path = file_path.parent / new_name
                 else:
-                    print("\nNo new name provided. Operation terminated .")
+                    print("\nNo new name provided. Operation terminated.")
                     return None
                 # 6. Save output text file
                 save_playlist_to_file(file_path, updated_songs)
