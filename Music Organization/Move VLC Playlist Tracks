@@ -328,6 +328,22 @@ def save_playlist_to_file(original_playlist_path, songs):
         return None
 
 
+def write_playlist_file(target_path, songs):
+    """
+    Helper function to write songs to an XSPF or M3U file.
+    """
+    ext = target_path.suffix.lower()
+
+    try:
+        if ext == '.xspf':
+            export_as_xspf(target_path, songs)
+        else:
+            export_as_m3u(target_path, songs)
+        return True
+    
+    except Exception as e:
+        print(f"\nError writing playlist file: {e}")
+        return False
 
 
 def main():
