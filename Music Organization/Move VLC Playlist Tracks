@@ -378,6 +378,20 @@ def main():
 
     print("Checking if file exists...", flush=True)
 
+    if not file_path.exists():
+        print(f"\nError: Could not find a file at '{file_path}'. Please check the path.")
+        return
+
+    ext = file_path.suffix.lower()
+
+    if ext not in extensions:
+        print(f"\nError: '{ext}' is not a supported playlist format.")
+        return
+
+    # 1. Parse tracks
+    songs = parse_xspf_playlist(file_path) if ext == '.xspf' else parse_m3u_playlist(file_path
+
+    '''
     # Check if the file actually exists before running
     if file_path.exists():
         # Save a few lines of code
@@ -436,7 +450,7 @@ def main():
             print(f"\nError: '{ext}' is not a supported playlist format.\nPlease input a .xspf, .m3u, or .m3u8 file.")
     else:
         print(f"\nError: Could not find a file at '{file_path}'. Please check the path and try again.")
-
+    '''
 
 if __name__ == "__main__":
     main()
