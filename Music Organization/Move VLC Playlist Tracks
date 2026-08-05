@@ -407,6 +407,12 @@ def main():
                 if show_review in ('y', 'yes', 'ye', 'es', 'ys'):
                     output_playlist(file_path, updated_songs, header="\nRELOCATED MUSIC DIRECTORY:")
 
+            # Prompt to replace the original playlist
+            replace_choice = input("\nWould you like to overwrite the original playlist file with these changes? (y/n): ").strip().lower()
+
+            if replace_choice in ('y', 'yes', 'ye', 'es', 'ys'):
+                final_file = replace_original_playlist(file_path, new_file_path)                
+
             # 6. Save output text file
             save_playlist_to_file(file_path, updated_songs)
 
