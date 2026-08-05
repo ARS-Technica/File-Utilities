@@ -315,7 +315,7 @@ def save_playlist_to_file(original_playlist_path, songs):
     # This prevents all output files from being saved as lowercase filesnames
 
     # Construct output filename using the true on-disk casing
-    output_filename = f"{original_stem}_relocated{original_ext}" # Change output name!
+    output_filename = f"{original_stem}{original_ext}" # Change output name!
     output_path = playlist_file.parent / output_filename
 
     ext = playlist_file.suffix.lower()
@@ -411,10 +411,19 @@ def main():
             replace_choice = input("\nWould you like to overwrite the original playlist file with these changes? (y/n): ").strip().lower()
 
             if replace_choice in ('y', 'yes', 'ye', 'es', 'ys'):
-                final_file = replace_original_playlist(file_path, new_file_path)                
+                final_file = replace_original_playlist(file_path, new_file_path)
 
-            # 6. Save output text file
-            save_playlist_to_file(file_path, updated_songs)
+            elif replace_choice in ('n', 'no', 'nah', 'nope', 'nay', 'o', 'naw'):
+                print("\nOperation canceled. The original playlist file remains unchanged.")
+                print(f"\nWhat would you like to name the new playlist file? (Press Esc to end): ")
+                new_name = input().strip()
+                if new_name:
+                    new_file_path = file_path.parent / new_name
+                else:
+                    print("\nNo new name provided. Operation terminated .")
+                    return None
+                # 6. Save output text file
+                save_playlist_to_file(file_path, updated_songs)
 
         else:
             print(f"\nError: '{ext}' is not a supported playlist format.\nPlease input a .xspf, .m3u, or .m3u8 file.")
