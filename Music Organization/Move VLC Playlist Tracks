@@ -238,6 +238,24 @@ def relocate_paths(songs):
     return updated_songs
 
 
+def replace_original_playlist(original_playlist_path, new_playlist_path):
+    """
+    Renames the original playlist file to a backup (.bak) 
+    and replaces the original file with the new playlist.
+    """
+    # Resolve the path to fetch its on-disk name from Windows
+    playlist_file = Path(original_playlist_path).resolve() #resolve is case-sensitive
+
+    # Extract stem and suffix matching the actual file on disk
+    original_stem = playlist_file.stem      # e.g. 'Favorites'
+    original_ext = playlist_file.suffix     # e.g. '.XSPF'
+    # This prevents all output files from being saved as lowercase filesnames
+
+    # Construct output filename using the true on-disk casing
+    backup_filename = f"{original_stem}.{original_ext}.bak" # Change output name!
+    backup_path = playlist_file.parent / backup_filename
+
+
 def save_playlist_to_file(original_playlist_path, songs):
     """
     Save the updated songs into a brand-new playlist file 
