@@ -391,6 +391,25 @@ def main():
     # 1. Parse tracks
     songs = parse_xspf_playlist(file_path) if ext == '.xspf' else parse_m3u_playlist(file_path
 
+    if not songs:
+        print("\nNo tracks found in the specified playlist file.")
+        return
+
+    # 2. Offer to list tracks
+    show_initial = input("\nWould you like to list the tracks in this playlist? (y/n): ").strip().lower()
+
+    if show_initial in ('y', 'yes'):
+        output_playlist(file_path, songs, header="CURRENT PLAYLIST TRACKS")   
+
+    # 3. Ask if user wants to revise filepaths
+    revise_choice = input("\nWould you like to revise the filepaths in this playlist? (y/n): ").strip().lower()
+    
+    if revise_choice not in ('y', 'yes'):
+        print("\nThank you for using the program! No changes were made. Goodbye.")
+        return    
+
+    
+
     '''
     # Check if the file actually exists before running
     if file_path.exists():
