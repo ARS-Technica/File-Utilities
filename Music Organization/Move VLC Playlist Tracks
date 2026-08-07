@@ -418,6 +418,39 @@ def main():
     original_resolved = file_path.resolve()
 
 
+    if backup_choice in ('y', 'yes', 'ye', 'es', 'ys'):
+        custom_backup_name = input("\nEnter a new name for the backup file (or press Enter for default): ").strip().strip("'\"")
+        
+        if custom_backup_name:
+            # Ensure the custom name carries the proper extension
+            if not custom_backup_name.lower().endswith(ext):
+                custom_backup_name += orig_resolved.suffix
+            backup_path = original_resolved.parent / custom_backup_name
+        else:
+            backup_path = original_resolved.parent / f"{orig_resolved.stem}_backup{orig_resolved.suffix}"
+
+        # Create backup copy of original file
+        try:
+            os.replace(original_resolved, backup_path)
+            print(f"\nBackup saved successfully to: {backup_path}")
+        except Exception as e:
+            print(f"\nError creating backup file: {e}")
+            return
+
+
+    # 6. Save newly revised tracks to the original file location
+        if write_playlist_file(original_resolved, updated_songs):
+            print(f"\nSuccessfully updated playlist: {original_resolved}")
+
+        # Optional final review
+        review_final = input("\nWould you like to view the newly updated filepaths? (y/n): ").strip().lower()
+        if review_final in ('y', 'yes'):
+            output_playlist(original_resolved, updated_songs, header="REVISED PLAYLIST TRACKS")
+
+        print("\nTask completed successfully! Goodbye.")
+
+
+
 
 
 
