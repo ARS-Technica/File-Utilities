@@ -234,6 +234,7 @@ def replace_original_playlist(original_playlist_path, new_playlist_path):
     """
     # Resolve the path to fetch its on-disk name from Windows
     playlist_file = Path(original_playlist_path).resolve() #resolve is case-sensitive
+    new_file = Path(new_playlist_path).resolve()
 
     # Extract stem and suffix matching the actual file on disk
     original_stem = playlist_file.stem      # e.g. 'Favorites'
