@@ -189,8 +189,13 @@ def relocate_paths(songs):
     """
     Prompts user for find-and-replace strings to rewrite track paths.
     """
-    # Prompt user if they want to view the new tracks
-    old_segment = input("\nWould you like to relocate the tracks of this playlist? (y/n): ").strip().lower()
+    # Confirm that the user wants to relocate the tracks
+    confirm = input("\nWould you like to relocate the tracks of this playlist? (y/n): ").strip().lower()
+     if confirm not in ('y', 'yes', 'ye', 'es', 'ys'):
+        print("\nNo changes will be made to the playlist tracks.")
+        return songs
+
+    old_segment = input("Enter the path text to replace (e.g., C:\\OldFolder): ").strip().strip("'\"")
 
     '''
     if show_new in ('y', 'yes', 'ye', 'es', 'ys'):
