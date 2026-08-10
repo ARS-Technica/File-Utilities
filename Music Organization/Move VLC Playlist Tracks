@@ -58,7 +58,6 @@ def backup_playlist_file(original_playlist_path, original_songs):
             backup_path = playlist_file.parent / backup_filename
         else:
             backup_path = playlist_file.parent / custom_backup_name
-
     # If the user does not provide a custom name, use the default backup naming convention
     else:
         # Construct output filename using the true on-disk casing
@@ -72,6 +71,7 @@ def backup_playlist_file(original_playlist_path, original_songs):
 
         else:
             export_as_m3u(backup_path, original_songs)
+
 
         print(f"\nSuccessfully created backup of the original playlist file!")
         # print(f"Located at: {output_path.resolve()}")
