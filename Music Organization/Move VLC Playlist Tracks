@@ -273,6 +273,28 @@ def replace_original_playlist(original_playlist_path, new_playlist_path):
         print("\n")
 
 
+        '''
+        # Confirm that the user wants to proceed with overwriting the original playlist
+        confirm_overwrite = input("\nDo you want to overwrite the original playlist file without a backup? (y/n): ").strip().lower()
+        if confirm_overwrite in ('y', 'yes', 'ye', 'es', 'ys'):
+            try:
+                # Overwrite the original playlist name with the updated playlist file
+                os.replace(new_playlist_path, original_playlist_path)
+                print(f"\nSuccessfully replaced the original playlist with the new playlist.")
+
+                return playlist_file  # Return the original playlist path for reference
+
+            # If the overwrite fails, inform the user and suggest checking file permissions
+            except Exception as overwrite_error:
+                print(f"\nError overwriting the original playlist file: {overwrite_error}")
+                print("\n")
+                print("\nThe original playlist file remains unchanged.")
+                print("\nCheck that the file isn't open or otherwise active.")                  
+                print("\nPlease check the file permissions and try again.")                
+        else:
+            print("\nOperation canceled. The original playlist file remains unchanged.")
+        '''
+
         return None
     
 
