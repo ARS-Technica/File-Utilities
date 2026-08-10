@@ -8,6 +8,10 @@ Description: A utility to fix broken playlists when moving music to a new hard
             to replace an old path with a new one. The updated playlist can then 
             be saved to a new file.
 
+            A utility to fix broken playlists when moving music to a new hard 
+            drive or folder. Parses VLC playlists (.xspf, .m3u, .m3u8), 
+            allows finding/replacing file path segments, and creates backups.
+
             This program is an extention of the "List VLC Playlist Tracks" script, which extracts and displays the tracks in a playlist.
 
 
