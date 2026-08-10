@@ -453,22 +453,19 @@ def main():
     # Confirm that the user wants to relocate the tracks
     confirm = input("\nWould you like to relocate the tracks of this playlist? (y/n): ").strip().lower()
 
+    # Resolve exact casing on disk
+    original_resolved = file_path.resolve()
+    # Must occur before back_choice or new_file_path, because the resolved path is used for backup and saving
 
     # 4. Ask if user wants to backup or overwrite
     backup_choice = input("\nWould you like to save a backup of the original playlist first? (y/n): ").strip().lower()
 
     # 5. Prompt the user to back-up the original playlist before overwriting it
     if backup_choice in ('y', 'yes', 'ye', 'es', 'ys'):
-        replace_original_playlist(original_playlist_path, new_playlist_path)
+        backup_playlist_file(original_resolved, updated_songs)
 
-
-    # 6. Prompt user to find and replace path
+    # 6. Perform path relocation on a new list
     updated_songs = relocate_paths(songs)
-
-    # Resolve exact casing on disk
-    original_resolved = file_path.resolve()
-
-
 
     # 7. Save the updated tracks to the original playlist file
     new_file_path = save_playlist_to_file(file_path, updated_songs)    
