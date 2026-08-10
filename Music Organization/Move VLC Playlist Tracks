@@ -452,6 +452,9 @@ def main():
     # 3. Ask if user wants to revise filepaths
     # Confirm that the user wants to relocate the tracks
     confirm = input("\nWould you like to relocate the tracks of this playlist? (y/n): ").strip().lower()
+    if confirm not in ('y', 'yes', 'ye', 'es', 'ys'):
+        print("\nThank you for using the program! No changes were made. Goodbye.")
+        return
 
     # Resolve exact casing on disk
     original_resolved = file_path.resolve()
@@ -496,6 +499,13 @@ def main():
 
     # 9. Save output text file
     save_playlist_to_file(file_path, updated_songs)
+
+
+
+
+
+
+  
 
 
     '''
