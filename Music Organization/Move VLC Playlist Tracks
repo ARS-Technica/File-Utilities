@@ -53,6 +53,11 @@ def backup_playlist_file(original_playlist_path, original_songs):
     # If the user provides a custom name
     if custom_backup_name:
         # Ensure the custom name carries the proper extension
+        if not custom_backup_name.lower().endswith(ext):
+            backup_filename = f"{custom_backup_name}{original_ext}" # Change output name!
+            backup_path = playlist_file.parent / backup_filename
+        else:
+            backup_path = playlist_file.parent / custom_backup_name
 
     # If the user does not provide a custom name, use the default backup naming convention
     else:
