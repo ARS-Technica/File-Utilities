@@ -335,7 +335,6 @@ def replace_original_playlist(original_playlist_path, new_playlist_path):
         '''
 
         return None
-    
 
 
 def save_playlist_to_file(original_playlist_path, songs):
@@ -499,113 +498,6 @@ def main():
 
     # 9. Save output text file
     save_playlist_to_file(file_path, updated_songs)
-
-
-
-
-
-
-  
-
-
-    '''
-    # Resolve exact casing on disk
-    original_resolved = file_path.resolve()
-
-
-    if backup_choice in ('y', 'yes', 'ye', 'es', 'ys'):
-        custom_backup_name = input("\nEnter a new name for the backup file (or press Enter for default): ").strip().strip("'\"")
-        
-        if custom_backup_name:
-            # Ensure the custom name carries the proper extension
-            if not custom_backup_name.lower().endswith(ext):
-                custom_backup_name += orig_resolved.suffix
-            backup_path = original_resolved.parent / custom_backup_name
-        else:
-            backup_path = original_resolved.parent / f"{original_resolved.stem}_backup{original_resolved.suffix}"
-
-        # Create backup copy of original file
-        try:
-            os.replace(original_resolved, backup_path)
-            print(f"\nBackup saved successfully to: {backup_path}")
-        except Exception as e:
-            print(f"\nError creating backup file: {e}")
-            return
-
-
-    # 6. Save newly revised tracks to the original file location
-        if write_playlist_file(original_resolved, updated_songs):
-            print(f"\nSuccessfully updated playlist: {original_resolved}")
-
-        # Optional final review
-        review_final = input("\nWould you like to view the newly updated filepaths? (y/n): ").strip().lower()
-        if review_final in ('y', 'yes'):
-            output_playlist(original_resolved, updated_songs, header="REVISED PLAYLIST TRACKS")
-
-        print("\nTask completed successfully! Goodbye.")
-    '''
-
-
-    '''
-    # Check if the file actually exists before running
-    if file_path.exists():
-        # Save a few lines of code
-        ext = file_path.suffix.lower()
-
-        if ext in extensions:
-            # 1. Parse tracks
-            # Route to the correct parsing function based on extension
-            # songs = parse_xspf_playlist(file_path) if ext == '.xspf' else parse_m3u_playlist(file_path)
-            if ext == '.xspf':
-                songs = parse_xspf_playlist(file_path)
-            else:
-                songs = parse_m3u_playlist(file_path)
-
-            # If there aren't any tracks, exit early to avoid unnecessary prompts
-            if not songs:
-                print("\nNo tracks found in the specified playlist file.")
-                return
-
-            # 2. Display initial playlist
-            output_playlist(file_path, songs, header="ORIGINAL PLAYLIST")
-
-            # 3. Prompt for Find & Replace
-            updated_songs = relocate_paths(songs)
-
-            # 4. Display updated tracks if changes were made
-            new_file_path = save_playlist_to_file(file_path, updated_songs)
-
-            # 5. Prompt user if they want to view the new tracks
-            if new_file_path:
-                # Prompt user if they want to view the new track filepaths
-                show_review = input("\nWould you like to review the new file paths of this playlist? (y/n): ").strip().lower()
-
-                if show_review in ('y', 'yes', 'ye', 'es', 'ys'):
-                    output_playlist(file_path, updated_songs, header="\nRELOCATED MUSIC DIRECTORY:")
-
-            # Prompt to replace the original playlist
-            replace_choice = input("\nWould you like to overwrite the original playlist file with these changes? (y/n): ").strip().lower()
-
-            if replace_choice in ('y', 'yes', 'ye', 'es', 'ys'):
-                final_file = replace_original_playlist(file_path, new_file_path)
-
-            elif replace_choice in ('n', 'no', 'nah', 'nope', 'nay', 'o', 'naw'):
-                print("\nOperation canceled. The original playlist file remains unchanged.")
-                print(f"\nWhat would you like to name the new playlist file? (Press Esc to end): ")
-                new_name = input().strip()
-                if new_name:
-                    new_file_path = file_path.parent / new_name
-                else:
-                    print("\nNo new name provided. Operation terminated.")
-                    return None
-                # 6. Save output text file
-                save_playlist_to_file(file_path, updated_songs)
-
-        else:
-            print(f"\nError: '{ext}' is not a supported playlist format.\nPlease input a .xspf, .m3u, or .m3u8 file.")
-    else:
-        print(f"\nError: Could not find a file at '{file_path}'. Please check the path and try again.")
-    '''
 
 if __name__ == "__main__":
     main()
