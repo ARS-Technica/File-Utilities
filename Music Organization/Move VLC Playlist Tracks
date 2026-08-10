@@ -33,7 +33,7 @@ if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 
-def backup_playlist_file(original_playlist_path, songs):
+def backup_playlist_file(original_playlist_path, original_songs):
     """
     Back up the original playlist file before overwriting it with the updated tracks.
     """
@@ -45,11 +45,30 @@ def backup_playlist_file(original_playlist_path, songs):
     original_ext = playlist_file.suffix     # e.g. '.XSPF'
     # This prevents all output files from being saved as lowercase filesnames
 
-    # Construct output filename using the true on-disk casing
-    output_filename = f"{original_stem}{original_ext}" # Change output name!
-    output_path = playlist_file.parent / output_filename
-
     ext = playlist_file.suffix.lower()
+
+    # If backup_choice in ('y', 'yes', 'ye', 'es', 'ys'):
+    custom_backup_name = input("\nEnter a new name for the backup file (or press Enter for default [<original_name>_backup<extension>]): ").strip().strip("'\"")
+
+    # If the user provides a custom name
+    if custom_backup_name:
+        # Ensure the custom name carries the proper extension
+
+    # If the user does not provide a custom name, use the default backup naming convention
+    else:
+        # Construct output filename using the true on-disk casing
+
+
+    # Create backup copy of original file
+    try: # Yes, this needs to be a try/except block to catch any file writing errors
+        if ext == '.xspf':
+            export_as_xspf(backup_path, original_songs)
+
+        else:
+            export_as_m3u(backup_path, original_songs)
+
+
+
 
     try: # Yes, this needs to be a try/except block to catch any file writing errors
         if ext == '.xspf':
