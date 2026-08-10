@@ -33,6 +33,43 @@ if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 
+def backup_playlist_file(original_playlist_path, songs):
+    """
+    Back up the original playlist file before overwriting it with the updated tracks.
+    """
+    # Resolve the path to fetch its on-disk name from Windows
+    playlist_file = Path(original_playlist_path).resolve() #resolve is case-sensitive
+
+    # Extract stem and suffix matching the actual file on disk
+    original_stem = playlist_file.stem      # e.g. 'Favorites'
+    original_ext = playlist_file.suffix     # e.g. '.XSPF'
+    # This prevents all output files from being saved as lowercase filesnames
+
+    # Construct output filename using the true on-disk casing
+    output_filename = f"{original_stem}{original_ext}" # Change output name!
+    output_path = playlist_file.parent / output_filename
+
+    ext = playlist_file.suffix.lower()
+
+    try: # Yes, this needs to be a try/except block to catch any file writing errors
+        if ext == '.xspf':
+            export_as_xspf(output_path, songs)
+        else:
+            export_as_m3u(output_path, songs)
+
+        print(f"\nSuccessfully compiled new playlist file!")
+        # print(f"Located at: {output_path.resolve()}")
+        # resolve() can rewrite casing based on Windows' drive index
+        print(f"Located at: {output_path}")
+
+        # Return the output path so main() knows where the new file is
+        return output_path
+
+    except Exception as e:
+        print(f"\nError saving playlist file: {e}")
+        return None
+
+
 def export_as_m3u(output_path, songs):
     """
     Write updated song tracks to an .m3u (plain text) playlist file.
