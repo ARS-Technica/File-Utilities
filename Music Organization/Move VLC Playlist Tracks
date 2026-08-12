@@ -474,7 +474,17 @@ def main():
     # 6. Save the updated tracks to the original playlist file
     new_file_path = save_playlist_to_file(file_path, updated_songs)    
 
+    # 6. Save modified tracks to temporary _relocated file
+    new_file_path = save_playlist_to_file(file_path, updated_songs)    
 
+    if not new_file_path:
+        print("\nError saving modified playlist. Operation aborted.")
+        return
+
+    # 7. Review modified tracks
+    show_review = input("\nWould you like to review the new file paths of this playlist? (y/n): ").strip().lower()
+    if show_review in ('y', 'yes', 'ye', 'es', 'ys'):
+        output_playlist(new_file_path, updated_songs, header="RELOCATED MUSIC DIRECTORY")
 
 
     '''
