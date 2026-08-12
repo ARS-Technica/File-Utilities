@@ -512,7 +512,17 @@ def main():
         write_playlist_file(original_resolved, updated_songs)
         print(f"\nSuccessfully overwritten original playlist at:\n  --> {original_resolved}")
     
-    
+    else:
+        # Save as a new file
+        print("\nOriginal playlist file remains unchanged.")
+        new_name = input("Enter a new name for the playlist file (or press Enter to cancel): ").strip().strip("'\"")
+
+        if new_name:
+            # Ensure correct file extension
+            if not new_name.lower().endswith(ext):
+                new_name += original_resolved.suffix
+
+            custom_save_path = original_resolved.parent / new_name    
     '''
 
 
