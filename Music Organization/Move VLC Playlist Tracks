@@ -523,6 +523,13 @@ def main():
                 new_name += original_resolved.suffix
 
             custom_save_path = original_resolved.parent / new_name    
+
+            # Actually write the data to the new path!
+            if write_playlist_file(custom_save_path, updated_songs):
+                print(f"\nNew playlist file saved at:\n  --> {custom_save_path}")
+        else:
+            print("\nNo name provided. Save operation canceled.")           
+
     '''
 
 
