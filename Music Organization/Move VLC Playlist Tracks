@@ -486,6 +486,18 @@ def main():
     if show_review in ('y', 'yes', 'ye', 'es', 'ys'):
         output_playlist(new_file_path, updated_songs, header="RELOCATED MUSIC DIRECTORY")
 
+    # 8. Overwrite original or keep as custom file
+    replace_choice = input("\nWould you like to overwrite the original playlist file with these changes? (y/n): ").strip().lower()
+
+    if replace_choice in ('y', 'yes', 'ye', 'es', 'ys'):
+        replace_original_playlist(file_path, new_file_path)
+    else:
+        print("\nOriginal playlist file left unchanged.")
+        print(f"Updated playlist file saved at: {new_file_path}")
+
+    print("\nTask complete! Goodbye.")
+
+
 
     '''
     # 8. Prompt user if they want to view the new tracks
