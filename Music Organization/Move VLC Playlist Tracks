@@ -400,6 +400,7 @@ def main():
     """
     Main function to execute the playlist parsing logic.
     """
+    # 1. Prompt for file path
     # Verify that the script is running in an environment that supports input()
     try:
         # Prompt the user for the file path
@@ -438,20 +439,20 @@ def main():
         print(f"\nError: '{ext}' is not a supported playlist format.")
         return
 
-    # 1. Parse tracks
+    # 2. Parse tracks
     songs = parse_xspf_playlist(file_path) if ext == '.xspf' else parse_m3u_playlist(file_path)
 
     if not songs:
         print("\nNo tracks found in the specified playlist file.")
         return
 
-    # 2. Offer to list tracks
+    # 3. Offer to list tracks
     show_initial = input("\nWould you like to list the tracks in this playlist? (y/n): ").strip().lower()
 
     if show_initial in ('y', 'yes', 'ye', 'es', 'ys'):
         output_playlist(file_path, songs, header="CURRENT PLAYLIST TRACKS")   
 
-    # 3. Ask if user wants to revise filepaths
+    # 4. Ask if user wants to revise filepaths
     # Confirm that the user wants to relocate the tracks
     confirm = input("\nWould you like to relocate the tracks of this playlist? (y/n): ").strip().lower()
     if confirm not in ('y', 'yes', 'ye', 'es', 'ys'):
@@ -462,31 +463,63 @@ def main():
     original_resolved = file_path.resolve()
     # Must occur before back_choice or new_file_path, because the resolved path is used for backup and saving
 
-    # 4. Perform path relocation on a new list
+    # 5. Perform path relocation on a new list
     updated_songs = relocate_paths(songs)
 
-    # 5. Prompt user to backup or overwrite the original playlist file 
+    # 6. Prompt user to backup or overwrite the original playlist file 
     backup_choice = input("\nWould you like to save a backup of the original playlist first? (y/n): ").strip().lower()
 
     if backup_choice in ('y', 'yes', 'ye', 'es', 'ys'):
         backup_playlist_file(original_resolved, updated_songs)
 
-    # 6. Save the updated tracks to the original playlist file
+    # 7: Review new tracks (optional)
+    show_review = input("\nWould you like to review the new file paths of this playlist? (y/n): ").strip().lower()
+    if show_review in ('y', 'yes', 'ye', 'es', 'ys'):
+        output_playlist(file_path, updated_songs, header="RELOCATED MUSIC DIRECTORY")
+
+    # 8: Decide saving method (always runs)
+    replace_choice = input("\nWould you like to overwrite the original playlist file with these changes? (y/n): ").strip().lower()
+
+    if replace_choice in ('y', 'yes', 'ye', 'es', 'ys'):
+        # Overwrite original (backup logic handled inside if configured)
+        write_playlist_file(original_resolved, updated_songs)
+        print(f"\nSuccessfully overwritten original playlist at:\n  --> {original_resolved}")
+    
+    else:
+        # Save as a new file
+        print("\nOriginal playlist file remains unchanged.")
+        new_name = input("Enter a new name for the playlist file (or press Enter to cancel): ").strip().strip("'\"")
+
+        if new_name:
+            # Ensure correct file extension
+            if not new_name.lower().endswith(ext):
+                new_name += original_resolved.suffix
+
+            custom_save_path = original_resolved.parent / new_name    
+
+            # Actually write the data to the new path!
+            if write_playlist_file(custom_save_path, updated_songs):
+                print(f"\nNew playlist file saved at:\n  --> {custom_save_path}")
+        else:
+            print("\nNo name provided. Save operation canceled.") 
+
+    '''
+    # 7. Save the updated tracks to the original playlist file
     new_file_path = save_playlist_to_file(file_path, updated_songs)    
 
-    # 6. Save modified tracks to temporary _relocated file
+    # 8. Save modified tracks to temporary _relocated file
     new_file_path = save_playlist_to_file(file_path, updated_songs)    
 
     if not new_file_path:
         print("\nError saving modified playlist. Operation aborted.")
         return
 
-    # 7. Review modified tracks
+    # 9. Review modified tracks
     show_review = input("\nWould you like to review the new file paths of this playlist? (y/n): ").strip().lower()
     if show_review in ('y', 'yes', 'ye', 'es', 'ys'):
         output_playlist(new_file_path, updated_songs, header="RELOCATED MUSIC DIRECTORY")
 
-    # 8. Overwrite original or keep as custom file
+    # 10. Overwrite original or keep as custom file
     replace_choice = input("\nWould you like to overwrite the original playlist file with these changes? (y/n): ").strip().lower()
 
     if replace_choice in ('y', 'yes', 'ye', 'es', 'ys'):
@@ -496,7 +529,7 @@ def main():
         print(f"Updated playlist file saved at: {new_file_path}")
 
     print("\nTask complete! Goodbye.")
-
+    '''
 
     '''
     # Step 1: Review new tracks (optional)
