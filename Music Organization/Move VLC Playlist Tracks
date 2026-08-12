@@ -341,6 +341,9 @@ def save_playlist_to_file(original_playlist_path, songs):
     """
     Save the updated songs into a brand-new playlist file 
     matching the original format (.xspf or .m3u).
+
+    Saves updated songs to a temporary relocated playlist file
+    without overwriting the original.
     """
     # Resolve the path to fetch its on-disk name from Windows
     playlist_file = Path(original_playlist_path).resolve() #resolve is case-sensitive
@@ -351,7 +354,7 @@ def save_playlist_to_file(original_playlist_path, songs):
     # This prevents all output files from being saved as lowercase filesnames
 
     # Construct output filename using the true on-disk casing
-    output_filename = f"{original_stem}{original_ext}" # Change output name!
+    output_filename = f"{original_stem}_relocated{original_ext}" # Change output name!
     output_path = playlist_file.parent / output_filename
 
     ext = playlist_file.suffix.lower()
