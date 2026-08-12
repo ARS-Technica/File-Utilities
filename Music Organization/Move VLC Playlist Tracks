@@ -501,9 +501,16 @@ def main():
     '''
     # Step 1: Review new tracks (optional)
     show_review = input("\nWould you like to review the new file paths of this playlist? (y/n): ").strip().lower()
-    
     if show_review in ('y', 'yes', 'ye', 'es', 'ys'):
-        output_playlist(file_path, updated_songs, header="RELOCATED MUSIC DIRECTORY")    
+        output_playlist(file_path, updated_songs, header="RELOCATED MUSIC DIRECTORY")
+
+    # Step 2: Decide saving method (always runs)
+    replace_choice = input("\nWould you like to overwrite the original playlist file with these changes? (y/n): ").strip().lower()
+
+    if replace_choice in ('y', 'yes', 'ye', 'es', 'ys'):
+        # Overwrite original (backup logic handled inside if configured)
+        write_playlist_file(original_resolved, updated_songs)
+        print(f"\nSuccessfully overwritten original playlist at:\n  --> {original_resolved}")
     
     
     '''
