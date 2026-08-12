@@ -465,16 +465,19 @@ def main():
     # 4. Perform path relocation on a new list
     updated_songs = relocate_paths(songs)
 
-    # 5. Ask if user wants to backup or overwrite
+    # 5. Prompt user to backup or overwrite the original playlist file 
     backup_choice = input("\nWould you like to save a backup of the original playlist first? (y/n): ").strip().lower()
 
-    # 6. Prompt the user to back-up the original playlist before overwriting it
     if backup_choice in ('y', 'yes', 'ye', 'es', 'ys'):
         backup_playlist_file(original_resolved, updated_songs)
 
-    # 7. Save the updated tracks to the original playlist file
+    # 6. Save the updated tracks to the original playlist file
     new_file_path = save_playlist_to_file(file_path, updated_songs)    
 
+
+
+
+    '''
     # 8. Prompt user if they want to view the new tracks
     if new_file_path:
         # Prompt user if they want to view the new track filepaths
@@ -501,6 +504,7 @@ def main():
 
     # 9. Save output text file
     save_playlist_to_file(file_path, updated_songs)
+    '''
 
 if __name__ == "__main__":
     main()
