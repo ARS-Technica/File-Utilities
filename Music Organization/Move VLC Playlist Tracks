@@ -498,6 +498,19 @@ def main():
     print("\nTask complete! Goodbye.")
 
 
+    '''
+    # Step 1: Review new tracks (optional)
+    show_review = input("\nWould you like to review the new file paths of this playlist? (y/n): ").strip().lower()
+    
+    if show_review in ('y', 'yes', 'ye', 'es', 'ys'):
+        output_playlist(file_path, updated_songs, header="RELOCATED MUSIC DIRECTORY")    
+    
+    
+    '''
+
+
+
+
 
     '''
     # 8. Prompt user if they want to view the new tracks
