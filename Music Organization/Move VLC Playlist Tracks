@@ -396,6 +396,54 @@ def write_playlist_file(target_path, songs):
         return False
 
 
+
+def get_valid_playlist_path():
+    """
+    Prompts user for playlist path, validates existence and extension.
+    """
+
+    # 1. Prompt for file path
+    # Verify that the script is running in an environment that supports input()
+    try:
+        # Prompt the user for the file path
+        user_input = input("Enter the full path to your playlist file: ")
+    except (EOFError, RuntimeError):
+        print("\nError: This IDE environment does not support interactive terminal input.")
+        print("Please run this script from a real terminal or enable 'External Console' in your IDE settings.")
+
+        return # End program
+
+    # Prevent program from hanging due to buffer deadlock
+    sys.stdout.flush()  # Force the terminal to process the input immediately
+
+    # Clean up accidental spaces or quotes around the path
+    clean_input = user_input.strip().strip("'\"") # Do NOT use .lower()
+  
+    # Visual feedback so you know it moved past input()
+    print(f"Processing: {clean_input}...") # Proves request isn't frozen
+    sys.stdout.flush()
+
+    # Convert to a Path object for easier handling (so we can check .suffix)
+    file_path = Path(clean_input).expanduser()
+
+    # Define the extensions we are looking for
+    extensions = ('.xspf', '.m3u', '.m3u8')
+
+    print("Checking if file exists...", flush=True)
+
+    if not file_path.exists():
+        print(f"\nError: Could not find a file at '{file_path}'. Please check the path.")
+        return
+
+    ext = file_path.suffix.lower()
+
+    if ext not in extensions:
+        print(f"\nError: '{ext}' is not a supported playlist format.")
+        return
+
+
+
+
 def main():
     """
     Main function to execute the playlist parsing logic.
@@ -502,7 +550,6 @@ def main():
                 print(f"\nNew playlist file saved at:\n  --> {custom_save_path}")
         else:
             print("\nNo name provided. Save operation canceled.") 
-
 
 if __name__ == "__main__":
     main()
