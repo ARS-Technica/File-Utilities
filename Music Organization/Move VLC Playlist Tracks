@@ -503,34 +503,6 @@ def main():
         else:
             print("\nNo name provided. Save operation canceled.") 
 
-    '''
-    # 7. Save the updated tracks to the original playlist file
-    new_file_path = save_playlist_to_file(file_path, updated_songs)    
-
-    # 8. Save modified tracks to temporary _relocated file
-    new_file_path = save_playlist_to_file(file_path, updated_songs)    
-
-    if not new_file_path:
-        print("\nError saving modified playlist. Operation aborted.")
-        return
-
-    # 9. Review modified tracks
-    show_review = input("\nWould you like to review the new file paths of this playlist? (y/n): ").strip().lower()
-    if show_review in ('y', 'yes', 'ye', 'es', 'ys'):
-        output_playlist(new_file_path, updated_songs, header="RELOCATED MUSIC DIRECTORY")
-
-    # 10. Overwrite original or keep as custom file
-    replace_choice = input("\nWould you like to overwrite the original playlist file with these changes? (y/n): ").strip().lower()
-
-    if replace_choice in ('y', 'yes', 'ye', 'es', 'ys'):
-        replace_original_playlist(file_path, new_file_path)
-    else:
-        print("\nOriginal playlist file left unchanged.")
-        print(f"Updated playlist file saved at: {new_file_path}")
-
-    print("\nTask complete! Goodbye.")
-    '''
-
 
 if __name__ == "__main__":
     main()
