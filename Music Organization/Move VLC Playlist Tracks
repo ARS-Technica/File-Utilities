@@ -396,13 +396,11 @@ def write_playlist_file(target_path, songs):
         return False
 
 
-
 def get_valid_playlist_path():
     """
     Prompts user for playlist path, validates existence and extension.
     """
-
-    # 1. Prompt for file path
+    # Prompt user for a file path to a playlist file (.xspf, .m3u, or .m3u8)
     # Verify that the script is running in an environment that supports input()
     try:
         # Prompt the user for the file path
@@ -441,7 +439,7 @@ def get_valid_playlist_path():
         print(f"\nError: '{ext}' is not a supported playlist format.")
         return
 
-
+    return file_path
 
 
 def main():
