@@ -396,6 +396,11 @@ def write_playlist_file(target_path, songs):
         return False
 
 
+
+
+
+
+
 def get_valid_playlist_path():
     """
     Prompts user for playlist path, validates existence and extension.
@@ -449,6 +454,19 @@ def get_valid_playlist_path():
         return
 
     return file_path
+
+
+def load_playlist(file_path):
+    """
+    Parses playlist based on extension and verifies track existence."""
+    ext = file_path.suffix.lower()
+    songs = parse_xspf_playlist(file_path) if ext == '.xspf' else parse_m3u_playlist(file_path)
+
+    if not songs:
+        print("\nNo tracks found in the specified playlist file.")
+        return None
+
+    return songs
 
 
 def main():
