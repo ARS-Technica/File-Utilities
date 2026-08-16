@@ -411,6 +411,15 @@ def get_valid_playlist_path():
 
         return # End program
 
+    if not user_input:  
+        print("\nValid playlist not found. Invalid file path or unsupported format.") 
+        retry_choice = input("\nWould you like to try entering the playlist path again? (y/n): ").strip().lower()
+
+        if retry_choice in ('y', 'yes', 'ye', 'es', 'ys'):
+            file_path = get_valid_playlist_path()
+        else:
+            return
+
     # Prevent program from hanging due to buffer deadlock
     sys.stdout.flush()  # Force the terminal to process the input immediately
 
