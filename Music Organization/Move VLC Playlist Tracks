@@ -8,16 +8,8 @@ Description: A utility to fix broken playlists when moving music to a new hard
             to replace an old path with a new one. The updated playlist can then 
             be saved to a new file.
 
-            This program is an extention of the "List VLC Playlist Tracks" script, which extracts and displays the tracks in a playlist.
-
-
-1. Extract tracks from the playlist.
-2. Display all tracks in the console.
-3. Prompt the user for the old path string to find (e.g., C://Users//old_name//Music).
-4.Prompt the user for the new path string to replace it with (e.g., D://Audio//Music).
-5. Iterate through the songs list and apply .replace(old, new) to each path.
-6. Display the modified tracks.
-7. Save the newly updated playlist file.
+            This program is an extention of the "List VLC Playlist Tracks" script,
+            which extracts and displays the tracks in a playlist.
 """
 
 # from logging import root
