@@ -8,8 +8,16 @@ Description: A utility to fix broken playlists when moving music to a new hard
             to replace an old path with a new one. The updated playlist can then 
             be saved to a new file.
 
-            This program is an extention of the "List VLC Playlist Tracks" script,
-            which extracts and displays the tracks in a playlist.
+            This program is an extention of the "List VLC Playlist Tracks" script, which extracts and displays the tracks in a playlist.
+
+
+1. Extract tracks from the playlist.
+2. Display all tracks in the console.
+3. Prompt the user for the old path string to find (e.g., C://Users//old_name//Music).
+4.Prompt the user for the new path string to replace it with (e.g., D://Audio//Music).
+5. Iterate through the songs list and apply .replace(old, new) to each path.
+6. Display the modified tracks.
+7. Save the newly updated playlist file.
 """
 
 # from logging import root
@@ -503,6 +511,9 @@ def main():
     if backup_choice in ('y', 'yes', 'ye', 'es', 'ys'):
         backup_playlist_file(original_resolved, updated_songs)
 
+
+
+    '''
     # 7: Review new tracks (optional)
     show_review = input("\nWould you like to review the new file paths of this playlist? (y/n): ").strip().lower()
     if show_review in ('y', 'yes', 'ye', 'es', 'ys'):
@@ -532,7 +543,9 @@ def main():
             if write_playlist_file(custom_save_path, updated_songs):
                 print(f"\nNew playlist file saved at:\n  --> {custom_save_path}")
         else:
-            print("\nNo name provided. Save operation canceled.") 
+            print("\nNo name provided. Save operation canceled.")
+        
+    '''
 
 if __name__ == "__main__":
     main()
