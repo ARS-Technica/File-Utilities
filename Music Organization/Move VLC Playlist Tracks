@@ -50,6 +50,7 @@ def backup_playlist_file(original_playlist_path, original_songs):
             backup_path = playlist_file.parent / backup_filename
         else:
             backup_path = playlist_file.parent / custom_backup_name
+        backup_path = playlist_file.parent / backup_filename
     # If the user does not provide a custom name, use the default backup naming convention
     else:
         # Construct output filename using the true on-disk casing
