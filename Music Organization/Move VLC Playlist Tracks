@@ -397,11 +397,6 @@ def write_playlist_file(target_path, songs):
         return False
 
 
-
-
-
-
-
 def get_valid_playlist_path():
     """
     Prompts user for playlist path, validates existence and extension.
