@@ -9,15 +9,6 @@ Description: A utility to fix broken playlists when moving music to a new hard
             be saved to a new file.
 
             This program is an extention of the "List VLC Playlist Tracks" script, which extracts and displays the tracks in a playlist.
-
-
-1. Extract tracks from the playlist.
-2. Display all tracks in the console.
-3. Prompt the user for the old path string to find (e.g., C://Users//old_name//Music).
-4.Prompt the user for the new path string to replace it with (e.g., D://Audio//Music).
-5. Iterate through the songs list and apply .replace(old, new) to each path.
-6. Display the modified tracks.
-7. Save the newly updated playlist file.
 """
 
 # from logging import root
@@ -310,29 +301,6 @@ def replace_original_playlist(original_playlist_path, new_playlist_path):
         print(f"\nError reads: {e}")
         print("\nWithout backing up the original playlist, the file will be overwritten.)")
         print("\n")
-
-
-        '''
-        # Confirm that the user wants to proceed with overwriting the original playlist
-        confirm_overwrite = input("\nDo you want to overwrite the original playlist file without a backup? (y/n): ").strip().lower()
-        if confirm_overwrite in ('y', 'yes', 'ye', 'es', 'ys'):
-            try:
-                # Overwrite the original playlist name with the updated playlist file
-                os.replace(new_playlist_path, original_playlist_path)
-                print(f"\nSuccessfully replaced the original playlist with the new playlist.")
-
-                return playlist_file  # Return the original playlist path for reference
-
-            # If the overwrite fails, inform the user and suggest checking file permissions
-            except Exception as overwrite_error:
-                print(f"\nError overwriting the original playlist file: {overwrite_error}")
-                print("\n")
-                print("\nThe original playlist file remains unchanged.")
-                print("\nCheck that the file isn't open or otherwise active.")                  
-                print("\nPlease check the file permissions and try again.")                
-        else:
-            print("\nOperation canceled. The original playlist file remains unchanged.")
-        '''
 
         return None
 
