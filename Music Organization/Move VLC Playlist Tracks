@@ -470,7 +470,17 @@ def save_and_finalize_playlist(original_path, original_songs, updated_songs):
     Handles optional backups, track reviews, and saving choice (overwrite vs save-as).
     """
 
-    pass
+    # 6. Prompt user to backup or overwrite the original playlist file 
+    backup_choice = input("\nWould you like to save a backup of the original playlist first? (y/n): ").strip().lower()
+
+    if backup_choice in ('y', 'yes', 'ye', 'es', 'ys'):
+        backup_playlist_file(original_resolved, updated_songs)
+   
+    # 7: Review new tracks (optional)
+    show_review = input("\nWould you like to review the new file paths of this playlist? (y/n): ").strip().lower()
+    if show_review in ('y', 'yes', 'ye', 'es', 'ys'):
+        output_playlist(file_path, updated_songs, header="RELOCATED MUSIC DIRECTORY")
+
 
 
 def main():
