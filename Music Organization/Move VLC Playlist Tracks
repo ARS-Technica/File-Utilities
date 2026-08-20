@@ -50,13 +50,13 @@ def backup_playlist_file(original_playlist_path, original_songs):
             backup_filename = f"{custom_backup_name}{original_ext}" # Change output name!
             # backup_path = playlist_file.parent / backup_filename
         else:
-            backup_path = playlist_file.parent / custom_backup_name
-        backup_path = playlist_file.parent / backup_filename
-    # If the user does not provide a custom name, use the default backup naming convention
+            backup_filename = custom_backup_name
+
     else:
         # Construct output filename using the true on-disk casing
         backup_filename = f"{original_stem}_backup{original_ext}" # Change output name!
-        backup_path = playlist_file.parent / backup_filename
+
+    backup_path = playlist_file.parent / backup_filename
 
     # Create backup copy of original file
     try: # Yes, this needs to be a try/except block to catch any file writing errors
