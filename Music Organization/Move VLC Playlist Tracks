@@ -48,7 +48,7 @@ def backup_playlist_file(original_playlist_path, original_songs):
     ext = playlist_file.suffix.lower()
 
     # If backup_choice in ('y', 'yes', 'ye', 'es', 'ys'):
-    # custom_backup_name = input("\nEnter a new name for the backup file (or press Enter for default [<original_name>_backup<extension>]): ").strip().strip("'\"")
+    custom_backup_name = input("\nEnter a new name for the backup file (or press Enter for default [<original_name>_backup<extension>]): ").strip().strip("'\"")
 
     # If the user provides a custom name
     if custom_backup_name:
@@ -442,8 +442,7 @@ def get_valid_playlist_path():
         print(f"\nError: Could not find a file at '{file_path}'. Please check the path.")
         return
 
-    # ext = file_path.suffix.lower()
-    # Moved to save_and_finalize_playlist
+    ext = file_path.suffix.lower()
 
     if ext not in extensions:
         print(f"\nError: '{ext}' is not a supported playlist format.")
@@ -479,14 +478,14 @@ def save_and_finalize_playlist(original_path, original_songs, updated_songs):
     backup_choice = input("\nWould you like to save a backup of the original playlist first? (y/n): ").strip().lower()
 
     if backup_choice in ('y', 'yes', 'ye', 'es', 'ys'):
-        backup_playlist_file(original_resolved, updated_songs)
+        backup_playlist_file(original_resolved, original_songs)
    
     # Review new tracks (optional)
     show_review = input("\nWould you like to review the new file paths of this playlist? (y/n): ").strip().lower()
     if show_review in ('y', 'yes', 'ye', 'es', 'ys'):
-        output_playlist(file_path, updated_songs, header="RELOCATED MUSIC DIRECTORY")
+        output_playlist(original_resolved, updated_songs, header="RELOCATED MUSIC DIRECTORY")
 
-    # 8: Decide saving method (always runs)
+    # Decide saving method (always runs)
     replace_choice = input("\nWould you like to overwrite the original playlist file with these changes? (y/n): ").strip().lower()
 
     if replace_choice in ('y', 'yes', 'ye', 'es', 'ys'):
