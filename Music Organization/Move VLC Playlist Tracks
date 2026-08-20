@@ -48,14 +48,14 @@ def backup_playlist_file(original_playlist_path, original_songs):
     ext = playlist_file.suffix.lower()
 
     # If backup_choice in ('y', 'yes', 'ye', 'es', 'ys'):
-    custom_backup_name = input("\nEnter a new name for the backup file (or press Enter for default [<original_name>_backup<extension>]): ").strip().strip("'\"")
+    # custom_backup_name = input("\nEnter a new name for the backup file (or press Enter for default [<original_name>_backup<extension>]): ").strip().strip("'\"")
 
     # If the user provides a custom name
     if custom_backup_name:
         # Ensure the custom name carries the proper extension
         if not custom_backup_name.lower().endswith(ext):
             backup_filename = f"{custom_backup_name}{original_ext}" # Change output name!
-            backup_path = playlist_file.parent / backup_filename
+            # backup_path = playlist_file.parent / backup_filename
         else:
             backup_path = playlist_file.parent / custom_backup_name
         backup_path = playlist_file.parent / backup_filename
@@ -72,7 +72,6 @@ def backup_playlist_file(original_playlist_path, original_songs):
 
         else:
             export_as_m3u(backup_path, original_songs)
-
 
         print(f"\nSuccessfully created backup of the original playlist file!")
         # print(f"Located at: {output_path.resolve()}")
