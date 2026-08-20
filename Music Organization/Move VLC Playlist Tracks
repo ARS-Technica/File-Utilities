@@ -246,6 +246,10 @@ def relocate_paths(songs):
     # Prompt for the text to replace old path segment
     new_segment = input(f"You have chosen to replace '{old_segment}' in the track paths.\n\nEnter the new replacement path text: ").strip().strip("'\"")
 
+    # Normalize slashes for consistent Windows path comparison
+    old_norm = old_segment.replace('/', '\\')
+    new_norm = new_segment.replace('/', '\\')
+
     replacements_count = 0
     updated_songs = []
 
@@ -529,3 +533,6 @@ def main():
 if __name__ == "__main__":
     main()
 
+
+# Playlist for Debuggin
+# C:\Users\andre\Music\Z Playlist Backups\favorites.xspf
