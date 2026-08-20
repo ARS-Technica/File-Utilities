@@ -24,6 +24,8 @@ if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 
+# RELOCATE TRACK FUNCTIONS ----------------------------------------------------
+
 def backup_playlist_file(original_playlist_path, original_songs):
     """
     Back up the original playlist file before overwriting it with the updated tracks.
@@ -261,108 +263,7 @@ def relocate_paths(songs):
     return updated_songs
 
 
-def replace_original_playlist(original_playlist_path, new_playlist_path):
-    """
-    Renames the original playlist file to a backup (.bak) 
-    and replaces the original file with the new playlist.
-    """
-    # Resolve the path to fetch its on-disk name from Windows
-    playlist_file = Path(original_playlist_path).resolve() #resolve is case-sensitive
-    new_file = Path(new_playlist_path).resolve()
-
-    # Extract stem and suffix matching the actual file on disk
-    original_stem = playlist_file.stem      # e.g. 'Favorites'
-    original_ext = playlist_file.suffix     # e.g. '.XSPF'
-    # This prevents all output files from being saved as lowercase filesnames
-
-    # Construct output filename using the true on-disk casing
-    backup_filename = f"{original_stem}.{original_ext}.bak" # Change output name!
-    backup_path = playlist_file.parent / backup_filename
-
-    # Try to back up the original playlist file before replacing it
-    try:
-        # Backup the original playlist file before replacing it
-        if playlist_file .exists():
-            # Rename the original playlist to a backup file
-            os.rename(playlist_file, backup_path)
-            print("\nSuccessfully backed up the original playlist to:")
-            print(f"\n{backup_path}")
-
-            # Overwrite the original playlist name with the updated playlist file
-            os.replace(new_file, playlist_file)
-            print(f"\nSuccessfully replaced the original playlist with the new playlist.")
-
-            return playlist_file  # Return the original playlist path for reference
-
-    # If an error occurs during backup or replacement, inform the user and provide options
-    except Exception as e:
-        print(f"\nError backing up your original playlist file:")
-        print(f"\n{original_playlist_path}")
-        print(f"\nError reads: {e}")
-        print("\nWithout backing up the original playlist, the file will be overwritten.)")
-        print("\n")
-
-        return None
-
-
-def save_playlist_to_file(original_playlist_path, songs):
-    """
-    Save the updated songs into a brand-new playlist file 
-    matching the original format (.xspf or .m3u).
-
-    Saves updated songs to a temporary relocated playlist file
-    without overwriting the original.
-    """
-    # Resolve the path to fetch its on-disk name from Windows
-    playlist_file = Path(original_playlist_path).resolve() #resolve is case-sensitive
-
-    # Extract stem and suffix matching the actual file on disk
-    original_stem = playlist_file.stem      # e.g. 'Favorites'
-    original_ext = playlist_file.suffix     # e.g. '.XSPF'
-    # This prevents all output files from being saved as lowercase filesnames
-
-    # Construct output filename using the true on-disk casing
-    output_filename = f"{original_stem}_relocated{original_ext}" # Change output name!
-    output_path = playlist_file.parent / output_filename
-
-    ext = playlist_file.suffix.lower()
-
-    try: # Yes, this needs to be a try/except block to catch any file writing errors
-        if ext == '.xspf':
-            export_as_xspf(output_path, songs)
-        else:
-            export_as_m3u(output_path, songs)
-
-        print(f"\nSuccessfully compiled new playlist file!")
-        # print(f"Located at: {output_path.resolve()}")
-        # resolve() can rewrite casing based on Windows' drive index
-        print(f"Located at: {output_path}")
-
-        # Return the output path so main() knows where the new file is
-        return output_path
-
-    except Exception as e:
-        print(f"\nError saving playlist file: {e}")
-        return None
-
-
-def write_playlist_file(target_path, songs):
-    """
-    Helper function to write songs to an XSPF or M3U file.
-    """
-    ext = target_path.suffix.lower()
-
-    try:
-        if ext == '.xspf':
-            export_as_xspf(target_path, songs)
-        else:
-            export_as_m3u(target_path, songs)
-        return True
-    
-    except Exception as e:
-        print(f"\nError writing playlist file: {e}")
-        return False
-
+# SAVE PLAYLIST FUNCTIONS -----------------------------------------------------
 
 def get_valid_playlist_path():
     """
@@ -432,6 +333,50 @@ def load_playlist(file_path):
     return songs
 
 
+def replace_original_playlist(original_playlist_path, new_playlist_path):
+    """
+    Renames the original playlist file to a backup (.bak) 
+    and replaces the original file with the new playlist.
+    """
+    # Resolve the path to fetch its on-disk name from Windows
+    playlist_file = Path(original_playlist_path).resolve() #resolve is case-sensitive
+    new_file = Path(new_playlist_path).resolve()
+
+    # Extract stem and suffix matching the actual file on disk
+    original_stem = playlist_file.stem      # e.g. 'Favorites'
+    original_ext = playlist_file.suffix     # e.g. '.XSPF'
+    # This prevents all output files from being saved as lowercase filesnames
+
+    # Construct output filename using the true on-disk casing
+    backup_filename = f"{original_stem}.{original_ext}.bak" # Change output name!
+    backup_path = playlist_file.parent / backup_filename
+
+    # Try to back up the original playlist file before replacing it
+    try:
+        # Backup the original playlist file before replacing it
+        if playlist_file .exists():
+            # Rename the original playlist to a backup file
+            os.rename(playlist_file, backup_path)
+            print("\nSuccessfully backed up the original playlist to:")
+            print(f"\n{backup_path}")
+
+            # Overwrite the original playlist name with the updated playlist file
+            os.replace(new_file, playlist_file)
+            print(f"\nSuccessfully replaced the original playlist with the new playlist.")
+
+            return playlist_file  # Return the original playlist path for reference
+
+    # If an error occurs during backup or replacement, inform the user and provide options
+    except Exception as e:
+        print(f"\nError backing up your original playlist file:")
+        print(f"\n{original_playlist_path}")
+        print(f"\nError reads: {e}")
+        print("\nWithout backing up the original playlist, the file will be overwritten.)")
+        print("\n")
+
+        return None
+
+
 def save_and_finalize_playlist(original_path, original_songs, updated_songs):
     """
     Handles optional backups, track reviews, and saving choice (overwrite vs save-as).
@@ -482,6 +427,67 @@ def save_and_finalize_playlist(original_path, original_songs, updated_songs):
             print("\nNo name provided. Save operation canceled.")
 
 
+def save_playlist_to_file(original_playlist_path, songs):
+    """
+    Save the updated songs into a brand-new playlist file 
+    matching the original format (.xspf or .m3u).
+
+    Saves updated songs to a temporary relocated playlist file
+    without overwriting the original.
+    """
+    # Resolve the path to fetch its on-disk name from Windows
+    playlist_file = Path(original_playlist_path).resolve() #resolve is case-sensitive
+
+    # Extract stem and suffix matching the actual file on disk
+    original_stem = playlist_file.stem      # e.g. 'Favorites'
+    original_ext = playlist_file.suffix     # e.g. '.XSPF'
+    # This prevents all output files from being saved as lowercase filesnames
+
+    # Construct output filename using the true on-disk casing
+    output_filename = f"{original_stem}_relocated{original_ext}" # Change output name!
+    output_path = playlist_file.parent / output_filename
+
+    ext = playlist_file.suffix.lower()
+
+    try: # Yes, this needs to be a try/except block to catch any file writing errors
+        if ext == '.xspf':
+            export_as_xspf(output_path, songs)
+        else:
+            export_as_m3u(output_path, songs)
+
+        print(f"\nSuccessfully compiled new playlist file!")
+        # print(f"Located at: {output_path.resolve()}")
+        # resolve() can rewrite casing based on Windows' drive index
+        print(f"Located at: {output_path}")
+
+        # Return the output path so main() knows where the new file is
+        return output_path
+
+    except Exception as e:
+        print(f"\nError saving playlist file: {e}")
+        return None
+
+
+def write_playlist_file(target_path, songs):
+    """
+    Helper function to write songs to an XSPF or M3U file.
+    """
+    ext = target_path.suffix.lower()
+
+    try:
+        if ext == '.xspf':
+            export_as_xspf(target_path, songs)
+        else:
+            export_as_m3u(target_path, songs)
+        return True
+    
+    except Exception as e:
+        print(f"\nError writing playlist file: {e}")
+        return False
+
+
+# FLOW CONTROL ----------------------------------------------------------------
+
 def main():
     """
     Main function to execute the playlist parsing logic.
@@ -507,6 +513,7 @@ def main():
     # 4. Ask if user wants to revise filepaths
     # Confirm that the user wants to relocate the tracks
     confirm = input("\nWould you like to relocate the tracks of this playlist? (y/n): ").strip().lower()
+
     if confirm not in ('y', 'yes', 'ye', 'es', 'ys'):
         print("\nThank you for using the program! No changes were made. Goodbye.")
         return
@@ -516,13 +523,9 @@ def main():
 
     # 6. Save, backup, and finalize
     save_and_finalize_playlist(file_path, songs, updated_songs)
-
     print("\nTask complete! Goodbye.")
     
 
 if __name__ == "__main__":
     main()
 
-
-# Playlist for Debuggin
-# C:\Users\andre\Music\Z Playlist Backups\favorites.xspf
