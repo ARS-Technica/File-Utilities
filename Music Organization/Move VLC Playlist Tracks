@@ -525,10 +525,6 @@ def main():
     if not file_path:
         return
 
-    # 2. Parse original tracks
-    '''songs = parse_xspf_playlist(file_path) if ext == '.xspf' else parse_m3u_playlist(file_path)'''
-    '''songs = parse_xspf_playlist(file_path) if ext == '.xspf' else parse_m3u_playlist(file_path)''' 
-
     # 2. Load playlist tracks
     songs = load_playlist(file_path)
 
@@ -551,6 +547,11 @@ def main():
 
     # 5. Perform path relocation on a new list
     updated_songs = relocate_paths(songs)
+
+    # 6. Save, backup, and finalize
+    save_and_finalize_playlist(file_path, songs, updated_songs)
+
+    print("\nTask complete! Goodbye.")
     
 
 if __name__ == "__main__":
