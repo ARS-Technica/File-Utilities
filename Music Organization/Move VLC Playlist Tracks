@@ -14,6 +14,7 @@ Description: A utility to fix broken playlists when moving music to a new hard
 # from logging import root
 import os # For prompting user for a file path
 from pathlib import Path # For parsing and validating file paths
+import re # To create a regex pattern to match string regardless of casing
 import sys # Reconfigures filenames to UTF-8 to avoid UnicodeDecodeError when printing paths
 from urllib.parse import unquote, quote  # For decoding URL-encoded paths
 import xml.etree.ElementTree as ET
@@ -48,7 +49,6 @@ def backup_playlist_file(original_playlist_path, original_songs):
         # Ensure the custom name carries the proper extension
         if not custom_backup_name.lower().endswith(ext):
             backup_filename = f"{custom_backup_name}{original_ext}" # Change output name!
-            # backup_path = playlist_file.parent / backup_filename
         else:
             backup_filename = custom_backup_name
 
@@ -192,8 +192,6 @@ def parse_xspf_playlist(file_path):
         # Collect into dictionary so the returned list has data
         songs.append({"title": title, "path": clean_path})
 
-    # output_playlist(file_path, songs) 
-
     return songs
 
 
@@ -224,9 +222,7 @@ def parse_m3u_playlist(file_path):
                 clean_path = unquote(line).replace('\u200b', '')
                 clean_path = clean_path.replace('/', '\\')
                 songs.append({"title": current_title, "path": clean_path})
-                current_title = "Unknown Title"  # Reset for next track
-
-    # output_playlist(file_path, songs)
+                current_title = "Unknown Title"  # Reset for next track            
 
     return songs
 
@@ -241,7 +237,7 @@ def relocate_paths(songs):
     # End function if no new path segment is entered as a replacement
     if not old_segment:
         print("No search text entered. Skipping path relocation.")
-        return songs
+        return songs   
 
     # Prompt for the text to replace old path segment
     new_segment = input(f"You have chosen to replace '{old_segment}' in the track paths.\n\nEnter the new replacement path text: ").strip().strip("'\"")
