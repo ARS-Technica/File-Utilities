@@ -410,47 +410,6 @@ def save_and_finalize_playlist(original_path, original_songs, updated_songs):
             print("\nNo name provided. Save operation canceled.")
 
 
-def save_playlist_to_file(original_playlist_path, songs):
-    """
-    Save the updated songs into a brand-new playlist file 
-    matching the original format (.xspf or .m3u).
-
-    Saves updated songs to a temporary relocated playlist file
-    without overwriting the original.
-    """
-    # Resolve the path to fetch its on-disk name from Windows
-    playlist_file = Path(original_playlist_path).resolve() #resolve is case-sensitive
-
-    # Extract stem and suffix matching the actual file on disk
-    original_stem = playlist_file.stem      # e.g. 'Favorites'
-    original_ext = playlist_file.suffix     # e.g. '.XSPF'
-    # This prevents all output files from being saved as lowercase filesnames
-
-    # Construct output filename using the true on-disk casing
-    output_filename = f"{original_stem}_relocated{original_ext}" # Change output name!
-    output_path = playlist_file.parent / output_filename
-
-    ext = playlist_file.suffix.lower()
-
-    try: # Yes, this needs to be a try/except block to catch any file writing errors
-        if ext == '.xspf':
-            export_as_xspf(output_path, songs)
-        else:
-            export_as_m3u(output_path, songs)
-
-        print(f"\nSuccessfully compiled new playlist file!")
-        # print(f"Located at: {output_path.resolve()}")
-        # resolve() can rewrite casing based on Windows' drive index
-        print(f"Located at: {output_path}")
-
-        # Return the output path so main() knows where the new file is
-        return output_path
-
-    except Exception as e:
-        print(f"\nError saving playlist file: {e}")
-        return None
-
-
 def write_playlist_file(target_path, songs):
     """
     Wries track exports to either XSPF or M3U file based on file extension.
@@ -515,6 +474,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-# Playlist for Debuggin
-# C:\Users\andre\Music\Z Playlist Backups\favorites.xspf
