@@ -285,16 +285,16 @@ def get_valid_playlist_path():
         print("\nError: This IDE environment does not support interactive terminal input.")
         print("Please run this script from a real terminal or enable 'External Console' in your IDE settings.")
 
-        return # End program
+        return None # End program
 
     if not user_input:  
         print("\nValid playlist not found. Invalid file path or unsupported format.") 
         retry_choice = input("\nWould you like to try entering the playlist path again? (y/n): ").strip().lower()
 
         if retry_choice in ('y', 'yes', 'ye', 'es', 'ys'):
-            file_path = get_valid_playlist_path()
-        else:
-            return
+            # file_path = get_valid_playlist_path()
+            return get_valid_playlist_path()  # Explicit return on recursion
+            # writing file_path = get_valid_playlist_path() without a return statement causes the outer function to continue running with the empty user_input string.
 
     # Prevent program from hanging due to buffer deadlock
     sys.stdout.flush()  # Force the terminal to process the input immediately
