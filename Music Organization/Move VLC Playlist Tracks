@@ -359,50 +359,6 @@ def load_playlist(file_path):
     return songs
 
 
-def replace_original_playlist(original_playlist_path, new_playlist_path):
-    """
-    Renames the original playlist file to a backup (.bak) 
-    and replaces the original file with the new playlist.
-    """
-    # Resolve the path to fetch its on-disk name from Windows
-    playlist_file = Path(original_playlist_path).resolve() #resolve is case-sensitive
-    new_file = Path(new_playlist_path).resolve()
-
-    # Extract stem and suffix matching the actual file on disk
-    original_stem = playlist_file.stem      # e.g. 'Favorites'
-    original_ext = playlist_file.suffix     # e.g. '.XSPF'
-    # This prevents all output files from being saved as lowercase filesnames
-
-    # Construct output filename using the true on-disk casing
-    backup_filename = f"{original_stem}.{original_ext}.bak" # Change output name!
-    backup_path = playlist_file.parent / backup_filename
-
-    # Try to back up the original playlist file before replacing it
-    try:
-        # Backup the original playlist file before replacing it
-        if playlist_file .exists():
-            # Rename the original playlist to a backup file
-            os.rename(playlist_file, backup_path)
-            print("\nSuccessfully backed up the original playlist to:")
-            print(f"\n{backup_path}")
-
-            # Overwrite the original playlist name with the updated playlist file
-            os.replace(new_file, playlist_file)
-            print(f"\nSuccessfully replaced the original playlist with the new playlist.")
-
-            return playlist_file  # Return the original playlist path for reference
-
-    # If an error occurs during backup or replacement, inform the user and provide options
-    except Exception as e:
-        print(f"\nError backing up your original playlist file:")
-        print(f"\n{original_playlist_path}")
-        print(f"\nError reads: {e}")
-        print("\nWithout backing up the original playlist, the file will be overwritten.)")
-        print("\n")
-
-        return None
-
-
 def save_and_finalize_playlist(original_path, original_songs, updated_songs):
     """
     Coordinates post-relocation actions: optional backup, optional track review,
@@ -441,7 +397,7 @@ def save_and_finalize_playlist(original_path, original_songs, updated_songs):
         new_name = input("Enter a new name for the playlist file (or press Enter to cancel): ").strip().strip("'\"")
 
         if new_name:
-            # Ensure correct file extension
+            # Ensure the user's custom file name includes the proper extension
             if not new_name.lower().endswith(ext):
                 new_name += original_resolved.suffix
 
