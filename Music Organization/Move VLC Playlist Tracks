@@ -129,8 +129,8 @@ def output_playlist(file_path, playlist, header=""):
 
     # Display updated tracks if changes were made
     for song in playlist:
-        # print(f"Title: {song['title']}, Path: {song['path']}")
         print(f"Title: {song['title']}")
+        # Angle brackets signal to terminal URL parsers that spaces are part of the path
         print(f"Path/URL: <{song['path']}>\n", flush=True)
         # wrapping the path string in angle brackets < and > signals to terminal parsers that the entire enclosed string is a single path unit
 
@@ -264,7 +264,9 @@ def relocate_paths(songs):
 
     for song in songs:
         original_path = song['path']
+        # Check if the search segment exists in this track's path
         if old_segment.lower() in original_path.lower():
+            # Substitute matched segment with new path while retaining remaining casing
             new_path = original_path.replace(old_segment, new_segment)
             replacements_count += 1
         else:
