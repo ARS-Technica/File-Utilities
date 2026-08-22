@@ -536,6 +536,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-# Playlist for Debuggin
-# C:\Users\andre\Music\Z Playlist Backups\favorites.xspf
