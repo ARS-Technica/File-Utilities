@@ -11,7 +11,6 @@ Description: A utility to fix broken playlists when moving music to a new hard
             This program is an extention of the "List VLC Playlist Tracks" script, which extracts and displays the tracks in a playlist.
 """
 
-# from logging import root
 import os # For prompting user for a file path
 from pathlib import Path # For parsing and validating file paths
 import re # To create a regex pattern to match string regardless of casing
