@@ -250,6 +250,9 @@ def relocate_paths(songs):
     old_norm = old_segment.replace('/', '\\')
     new_norm = new_segment.replace('/', '\\')
 
+    # Regex pattern to match string regardless of casing
+    pattern = re.compile(re.escape(old_norm), re.IGNORECASE)
+
     replacements_count = 0
     updated_songs = []
 
