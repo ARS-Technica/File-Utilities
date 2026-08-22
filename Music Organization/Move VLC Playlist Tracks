@@ -103,16 +103,19 @@ def export_as_xspf(output_path, songs):
     for song in songs:
         track = ET.SubElement(track_list, "track")
 
+        # Set song title element
         title_el = ET.SubElement(track, "title")
         title_el.text = song['title']
 
+        # Re-encode Windows paths back into compliant file:/// URIs for VLC
         location_el = ET.SubElement(track, "location")
         clean_path = song['path'].replace('\\', '/')
         encoded_uri = "file:///" + quote(clean_path, safe="/:")
         location_el.text = encoded_uri
 
+    # Write formatted XML tree to target path
     tree = ET.ElementTree(root)
-    ET.indent(tree, space="  ")
+    ET.indent(tree, space="  ")  # Pretty-print XML structure
     tree.write(output_path, encoding="utf-8", xml_declaration=True)
    
 
