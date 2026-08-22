@@ -22,6 +22,8 @@ import xml.etree.ElementTree as ET
 # Force stdout to use UTF-8 if standard stream supports reconfigure
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+# This prevents UnicodeEncodeError crashes when printing paths containing
+# non-ASCII characters or unique unicode symbols to the Windows console.
 
 
 # RELOCATE TRACK FUNCTIONS ----------------------------------------------------
@@ -29,6 +31,7 @@ if hasattr(sys.stdout, 'reconfigure'):
 def backup_playlist_file(original_playlist_path, original_songs):
     """
     Back up the original playlist file before overwriting it with the updated tracks.
+    Preserves true on-disk casing and supports default or custom backup filenames.
     """
     # Resolve the path to fetch its on-disk name from Windows
     playlist_file = Path(original_playlist_path).resolve() #resolve is case-sensitive
@@ -116,6 +119,7 @@ def export_as_xspf(output_path, songs):
 def output_playlist(file_path, playlist, header=""):
     """
     Outputs the playlist to the console.
+    Encloses paths in angle brackets (<...>) to assist terminal hyperlink parsers.
     """
     if header:
         print(f"\n=== {header} ===")
@@ -136,6 +140,7 @@ def output_playlist(file_path, playlist, header=""):
 def parse_xspf_playlist(file_path):
     """
     Parses XML-based XSPF playlists safely with or without namespaces.
+    Extracts track titles and decodes file:/// URI locations to Windows paths.
     """
     songs = []
 
@@ -167,11 +172,13 @@ def parse_xspf_playlist(file_path):
         if title_element is None:
             title_element = track.find('.//{*}title')
 
+        # Locate the <location> tag (namespaced first, then wildcard fallback)
         location_element = track.find('ns:location', namespace) if 'ns' in locals() else None
 
         if location_element is None:
             location_element = track.find('{*}location')
 
+        # Extract inner text safely, defaulting if tag is empty/missing
         title = title_element.text if title_element is not None and title_element.text else "Unknown Title"
         location = location_element.text if location_element is not None and location_element.text else "Unknown Location"
 
@@ -231,7 +238,8 @@ def parse_m3u_playlist(file_path):
 
 def relocate_paths(songs):
     """
-    Prompts user for find-and-replace strings to rewrite track paths.
+    Prompts the user for a search string and a replacement string.
+    Performs case-insensitive, slash-normalized find-and-replace across all track paths.
     """
     # Prompt for the new path segment to replace it with
     old_segment = input("Enter the path text to replace (e.g., C:\\OldFolder): ").strip().strip("'\"")
@@ -331,7 +339,9 @@ def get_valid_playlist_path():
 
 def load_playlist(file_path):
     """
-    Parses playlist based on extension and verifies track existence."""
+    Parses playlist based on extension and verifies track existence.
+    Checks for non-empty track lists.
+    """
     ext = file_path.suffix.lower()
     songs = parse_xspf_playlist(file_path) if ext == '.xspf' else parse_m3u_playlist(file_path)
 
@@ -388,7 +398,8 @@ def replace_original_playlist(original_playlist_path, new_playlist_path):
 
 def save_and_finalize_playlist(original_path, original_songs, updated_songs):
     """
-    Handles optional backups, track reviews, and saving choice (overwrite vs save-as).
+    Coordinates post-relocation actions: optional backup, optional track review,
+    and choice between overwriting the original file or saving to a new filename.
     """
     # Perform path relocation with (exact file name casing)
     original_resolved = original_path.resolve()
@@ -500,6 +511,8 @@ def write_playlist_file(target_path, songs):
 def main():
     """
     Main function to execute the playlist parsing logic.
+    Coordinates path validation, loading, track viewing, path transformation, 
+    and final disk persistence.
     """
     # 1. Prompt for file path
     file_path = get_valid_playlist_path()
@@ -538,3 +551,6 @@ def main():
 if __name__ == "__main__":
     main()
 
+
+# Playlist for Debuggin
+# C:\Users\andre\Music\Z Playlist Backups\favorites.xspf
