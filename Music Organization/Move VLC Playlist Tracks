@@ -224,7 +224,7 @@ def parse_m3u_playlist(file_path):
                 clean_path = unquote(line).replace('\u200b', '')
                 clean_path = clean_path.replace('/', '\\')
                 songs.append({"title": current_title, "path": clean_path})
-                current_title = "Unknown Title"  # Reset for next track            
+                current_title = "Unknown Title"  # Reset for next track
 
     # output_playlist(file_path, songs)
 
@@ -241,7 +241,7 @@ def relocate_paths(songs):
     # End function if no new path segment is entered as a replacement
     if not old_segment:
         print("No search text entered. Skipping path relocation.")
-        return songs   
+        return songs
 
     # Prompt for the text to replace old path segment
     new_segment = input(f"You have chosen to replace '{old_segment}' in the track paths.\n\nEnter the new replacement path text: ").strip().strip("'\"")
@@ -267,6 +267,10 @@ def relocate_paths(songs):
         updated_songs.append({"title": song['title'], "path": new_path})
 
     print(f"\nReplacement complete! Updated paths for {replacements_count} out of {len(songs)} tracks.")
+
+    if replacements_count == 0:
+        print("Warning: No track paths matched your search query. Please double-check your path string.")
+
     return updated_songs
 
 
