@@ -197,6 +197,7 @@ def parse_xspf_playlist(file_path):
 def parse_m3u_playlist(file_path):
     """
     Parses plain-text M3U/M3U8 playlists.
+    Extracts metadata from #EXTINF directives and pairs them with file paths.
     """
     songs = []
 
@@ -221,6 +222,8 @@ def parse_m3u_playlist(file_path):
                 clean_path = unquote(line).replace('\u200b', '')
                 clean_path = clean_path.replace('/', '\\')
                 songs.append({"title": current_title, "path": clean_path})
+
+                # Reset title for the next track in case metadata is omitted
                 current_title = "Unknown Title"  # Reset for next track            
 
     return songs
